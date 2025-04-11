@@ -1,0 +1,88 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100" style="margin-top:20px">
+    <div class="row g-0 shadow-lg rounded-4 bg-white overflow-hidden" style="max-width: 900px; width: 100%;">
+        <!-- Hình ảnh minh họa -->
+        <div class="col-lg-6 d-none d-lg-block">
+            <img src="~/images/caregivers/image-1.jpg" class="img-fluid h-100 w-100" alt="Login Image" style="object-fit: cover;">
+        </div>
+
+        <!-- Form Login -->
+        <div class="col-lg-6 d-flex align-items-center">
+            <div class="p-5 w-100">
+                <h2 class="text-center text-primary fw-bold">Welcome Back!</h2>
+                <p class="text-center text-muted">Login to continue</p>
+                <hr class="mb-4" />
+
+                <form id="account" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger text-center"></div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label fw-semibold">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-envelope text-primary"></i></span>
+                            <input asp-for="Input.Email" class="form-control" placeholder="Enter your email" required />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label asp-for="Input.Password" class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-lock text-primary"></i></span>
+                            <input asp-for="Input.Password" type="password" class="form-control password-field" placeholder="Enter your password" required />
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                        <label class="form-check-label" asp-for="Input.RememberMe">Remember me</label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="login-submit" type="submit" class="btn btn-primary w-100 rounded-pill py-2 shadow-sm">
+                        <i class="bi bi-box-arrow-in-right"></i> Log in
+                    </button>
+
+                    <!-- Links -->
+                    <div class="text-center mt-3">
+                        <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none text-primary">Forgot password?</a>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p class="text-muted">Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-primary fw-bold">Sign up</a></p>
+                    </div>
+                </form>
+
+                <!-- Login with External Providers -->
+                @if (Model.ExternalLogins?.Count > 0)
+                {
+                    <div class="text-center mt-4">
+                        <p class="text-muted">Or sign in with</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
+                                <button type="submit" class="btn btn-outline-dark rounded-pill px-3" name="provider" value="@provider.Name">
+                                    <i class="bi bi-box-arrow-in-right"></i> @provider.DisplayName
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

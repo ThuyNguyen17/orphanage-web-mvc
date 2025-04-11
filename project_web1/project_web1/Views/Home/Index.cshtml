@@ -1,0 +1,726 @@
+﻿@{
+    ViewData["Title"] = "Home Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .modal-content {
+        width: 150%; /* Hoặc thay đổi thành giá trị bạn muốn */
+        max-width: 1500px; /* Giới hạn chiều rộng tối đa */
+        margin: 0 auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Thiết lập cho toàn bộ modal cảm ơn */
+    #thankYouModal .modal-dialog {
+        max-width: 500px; /* Giới hạn chiều rộng của modal */
+        margin-top: 100px; /* Tạo khoảng cách từ trên xuống */
+    }
+
+    #thankYouModal .modal-content {
+        background-color: #f9f9f9; /* Màu nền cho card */
+        border-radius: 10px; /* Bo góc cho modal */
+        border: 1px solid #ddd; /* Viền nhẹ cho modal */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    }
+
+    #thankYouModal .modal-header {
+        background-color: #4CAF50; /* Màu nền header */
+        color: white; /* Màu chữ trong header */
+        border-top-left-radius: 10px; /* Bo góc cho phần trên trái */
+        border-top-right-radius: 10px; /* Bo góc cho phần trên phải */
+        padding: 15px;
+        text-align: center;
+    }
+
+    #thankYouModal .modal-title {
+        font-size: 1.5rem; /* Kích thước chữ tiêu đề */
+        font-weight: bold;
+    }
+
+    #thankYouModal .modal-body {
+        padding: 25px;
+        text-align: center; /* Căn giữa nội dung */
+    }
+
+        #thankYouModal .modal-body p {
+            font-size: 1.1rem; /* Kích thước chữ cho thông báo */
+            color: #333; /* Màu chữ chính */
+        }
+
+        #thankYouModal .modal-body #donorNameThankYou {
+            font-weight: bold;
+            color: #007bff; /* Màu sắc đặc biệt cho tên người quyên góp */
+        }
+
+        #thankYouModal .modal-body #donationAmountThankYou {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #ff5722; /* Màu sắc cho số tiền */
+        }
+
+        #thankYouModal .modal-body #currencySymbolThankYou {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: #4CAF50; /* Màu sắc cho biểu tượng tiền tệ */
+        }
+
+    #thankYouModal .btn-close {
+        background-color: transparent; /* Nút đóng trong suốt */
+        border: none;
+    }
+
+    #thankYouModal .modal-footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 15px;
+    }
+
+    /* Nếu muốn thêm hover cho nút đóng */
+    #thankYouModal .btn-close:hover {
+        background-color: #ff5733; /* Màu nền khi hover */
+        color: white; /* Màu chữ khi hover */
+    }
+
+</style>
+@model Tuple<IEnumerable<project_web1.Models.Tre>, IEnumerable<project_web1.Models.Event>, IEnumerable<project_web1.Models.NguoiChamSoc>>
+<!-- Hero Start -->
+<div class="container-fluid py-5 hero-header wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-7 col-md-12">
+                <h1 class="mb-3 text-primary">Be the Light in a Child’s Darkness</h1>
+                <h1 class="mb-5 display-1 text-white">Give love. Give food. Give a future.</h1>
+                <a asp-action="Donate" class="btn btn-primary px-5 py-3 btn-border-radius" data-bs-toggle="modal" data-bs-target="#donateModal">Help Now</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero End -->
+<!-- About Start -->
+<div class="container-fluid py-5 bg-light">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5 wow fadeIn" data-wow-delay="0.1s">
+                <div class="video border">
+                    <button type="button" class="btn btn-play" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/ukHK1GVyr0I" data-bs-target="#videoModal">
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-7 wow fadeIn" data-wow-delay="0.3s">
+                <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">About Us</h4>
+                <h1 class="text-dark mb-4 display-5">Nurturing Hope – Building Brighter Tomorrows</h1>
+                <p class="text-dark mb-4">
+                    At Orphant Center, we believe that every child, no matter their background, deserves a loving home, a caring heart, and the opportunity to thrive.Since our founding in 2004, we have opened our doors to children who have lost their families, giving them not just shelter—but a place to truly belong. Here, they receive more than basic needsWe provide education, healthcare, emotional guidance, and a safe environment where they can grow with confidence and joy. Every child is unique. That’s why we focus on helping them unlock their potential and discover their dreams—with the help of dedicated staff, volunteers, and the generosity of people like you. Orphant Center is not just a center—it’s a family, a second chance, and a beacon of hope.
+                </p>
+                <div class="row mb-4">
+                    <div class="col-lg-6">
+                        <h6 class="mb-3"><i class="fas fa-check-circle me-2"></i>Loving Atmosphere</h6>
+                        <h6 class="mb-3"><i class="fas fa-check-circle me-2 text-primary"></i>Skilled Educators</h6>
+                        <h6 class="mb-3"><i class="fas fa-check-circle me-2 text-secondary"></i>Secure Environment </h6>
+                    </div>
+                    <div class="col-lg-6">
+                        <h6 class="mb-3"><i class="fas fa-check-circle me-2"></i>Balanced Nutrition</h6>
+                        <h6 class="mb-3"><i class="fas fa-check-circle me-2 text-primary"></i>Sports & Physical Activities</h6>
+                        <h6><i class="fas fa-check-circle me-2 text-secondary"></i>Outdoor Fun</h6>
+                    </div>
+                </div>
+                <a asp-action="About" class="btn btn-primary px-5 py-3 btn-border-radius">More Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Video Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-0">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="videoModalLabel">Our Story: Nau An Cho Em</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="video" class="embed-responsive-item" src="" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <small>See how we've transformed lives since 2005</small>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+<!-- Service Start -->
+<div class="container-fluid service py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 700px;">
+            <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">What We Do</h4>
+            <h1 class="mb-5 display-3">Making A Difference In The Lives Of Orphaned Children</h1>
+        </div>
+        <div class="row g-5">
+            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeIn" data-wow-delay="0.1s">
+                <div class="text-center border-primary border bg-white service-item">
+                    <div class="service-content d-flex align-items-center justify-content-center p-4">
+                        <div class="service-content-inner">
+                            <div class="p-4"><i class="fas fa-gamepad fa-6x text-primary"></i></div>
+                            <a href="#" class="h4">Learning Through Play</a>
+                            <p class="my-3">
+                                We believe that education should be fun and engaging. Our children learn through interactive activities and games, which help develop both their academic and social skills.
+                            </p>
+                            <a href="#" class="btn btn-primary text-white px-4 py-2 my-2 btn-border-radius">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeIn" data-wow-delay="0.3s">
+                <div class="text-center border-primary border bg-white service-item">
+                    <div class="service-content d-flex align-items-center justify-content-center p-4">
+                        <div class="service-content-inner">
+                            <div class="p-4"><i class="fas fa-sort-alpha-down fa-6x text-primary"></i></div>
+                            <a href="#" class="h4">Comprehensive Programs</a>
+                            <p class="my-3">
+                                Our programs are designed to cater to every child’s needs, from emotional support to educational advancement, ensuring their holistic development.
+                            </p>
+                            <a href="#" class="btn btn-primary text-white px-4 py-2 my-2 btn-border-radius">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeIn" data-wow-delay="0.5s">
+                <div class="text-center border-primary border bg-white service-item">
+                    <div class="service-content d-flex align-items-center justify-content-center p-4">
+                        <div class="service-content-inner">
+                            <div class="p-4"><i class="fas fa-users fa-6x text-primary"></i></div>
+                            <a href="#" class="h4">Caring & Skilled Staff</a>
+                            <p class="my-3">
+                                Our team consists of dedicated caregivers, educators, and specialists who provide the children with the love and guidance they need to flourish.
+                            </p>
+                            <a href="#" class="btn btn-primary text-white px-4 py-2 my-2 btn-border-radius">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-xl-3 wow fadeIn" data-wow-delay="0.7s">
+                <div class="text-center border-primary border bg-white service-item">
+                    <div class="service-content d-flex align-items-center justify-content-center p-4">
+                        <div class="service-content-inner">
+                            <div class="p-4"><i class="fas fa-user-nurse fa-6x text-primary"></i></div>
+                            <a href="#" class="h4">Emotional & Mental Health Support</a>
+                            <p class="my-3">
+                                We provide ongoing emotional and psychological support to help our children heal from past trauma and build resilience for a brighter future.
+                            </p>
+                            <a href="#" class="btn btn-primary text-white px-4 py-2 my-2 btn-border-radius">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Service End -->
+<!-- Programs Start -->
+<div class="container-fluid program py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 700px;">
+            <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Our Programs</h4>
+            <h1 class="mb-5 display-3">Support Orphans. Spread Love.</h1>
+        </div>
+        <div class="row g-5 justify-content-center">
+            @foreach (var child in Model.Item1.Take(3))
+            {
+                <div class="col-md-6 col-lg-6 col-xl-4 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="program-item rounded">
+                        <div class="program-img position-relative">
+                            <div class="overflow-hidden img-border-radius">
+                                <img src="~/images/@child.AnhDaiDien" class="img-fluid w-100" alt="Image">
+                            </div>
+                            <div class="px-2 py-2 bg-primary text-white program-rate">
+                                @(child.NgaySinh.HasValue ? child.NgaySinh.Value.ToString("dd/MM/yyyy") : "N/A")
+                            </div>
+                        </div>
+                        <div class="program-text bg-white px-4 pb-3">
+                            <div class="program-text-inner">
+                                <a href="#" class="h4">@child.HoTen</a>
+                                <p class="mt-3 mb-0">@child.Quote</p>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between px-4 py-2 bg-primary rounded-bottom">
+                            <small class="text-white"><i class="fas fa-book me-1"></i>  @(child.NgayNhapTrungTam.HasValue ? child.NgayNhapTrungTam.Value.ToString("dd/MM/yyyy") : "N/A")</small>
+                            <small class="text-white"><i class="fas fa-clock me-1"></i>@child.GioiTinh</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Programs End -->
+<!-- About Start -->
+<div class="container-fluid song py-5" style="background-color: aliceblue;">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-7 wow fadeIn" data-wow-delay="0.3s">
+                <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">The Song</h4>
+                <h1 class="text-dark mb-4 display-5">You are my sunshine</h1>
+                <p class="text-dark mb-4">
+                    "You are my sunshine, my only sunshine, <br>
+                    you make me happy <br>
+                    when skies are gray. <br>
+                    You'll never know, dear <br>
+                    How much I love you <br>
+                    Please don't take my sunshine away <br>
+                    I'll always love you <br>
+                    And make you happy <br>
+                    And nothing else could come between <br>
+                    But if you leave me to allow another <br>
+                    You'll have shattered all of my dreams"
+                </p>
+            </div>
+            <div class="col-lg-5 wow fadeIn" data-wow-delay="0.1s" style="text-align: right;">
+                <img src="~/images/main/child.jpg" alt="Video Background" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Blog Start-->
+<div class="container-fluid blog py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
+            <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Latest News & Blog</h4>
+            <h1 class="mb-5 display-3">Our Upcoming Events for the Children</h1>
+        </div>
+        <div class="row g-5 justify-content-center">
+            @foreach (var post in Model.Item2.Take(3))
+            {
+                <div class="col-md-6 col-lg-6 col-xl-4 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="blog-item rounded-bottom">
+                        <div class="blog-img overflow-hidden position-relative img-border-radius">
+                            <img src="@post.ImageUrl" class="img-fluid w-100" alt="Image">
+                        </div>
+                        <div class="d-flex justify-content-between px-4 py-3 bg-light border-bottom border-primary blog-date-comments">
+                            <small class="text-dark"><i class="fas fa-calendar me-1 text-dark"></i>Wonderful memory</small>
+                            <small class="text-dark"><i class="fas fa-comment-alt me-1 text-dark"></i> Comments</small>
+                        </div>
+                        <div class="blog-content d-flex align-items-center px-4 py-3 bg-light">
+                            <div class="ms-3">
+                                <h6 class="text-primary">@post.Location</h6>
+                                <p class="text-muted">@post.Description</p>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 bg-light rounded-bottom">
+                            <div class="blog-text-inner">
+                                <a href="#" class="h4">@post.Title</a>
+                                <p class="mt-3 mb-4">@post.Time</p>
+                            </div>
+                            <div class="text-center">
+                                <a asp-action="Event" class="btn btn-primary text-white px-4 py-2 mb-3 btn-border-radius">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Người Chăm Sóc Start-->
+<div class="container-fluid team py-5">
+    <div class="container py-5">
+        <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 600px;">
+            <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Our Caregivers</h4>
+            <h1 class="mb-5 display-3">Meet With Our Caregivers</h1>
+        </div>
+        <div class="row g-5 justify-content-center">
+            @foreach (var caregiver in Model.Item3.Take(4))
+            {
+                <div class="col-md-6 col-lg-4 col-xl-3 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="team-item border border-primary img-border-radius overflow-hidden">
+                        <img src="images/@caregiver.ImageUrl" class="img-fluid w-100" alt="">
+                        <div class="team-icon d-flex align-items-center justify-content-center">
+                            <a class="share btn btn-primary btn-md-square text-white rounded-circle me-3" href=""><i class="fas fa-share-alt"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square text-white rounded-circle me-3" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square text-white rounded-circle me-3" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="share-link btn btn-primary btn-md-square text-white rounded-circle" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                        <div class="team-content text-center py-3">
+                            <h4 class="text-primary">@caregiver.HoTen</h4>
+                            <p class="text-muted mb-2">@caregiver.Email</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Người Chăm Sóc End-->
+<!-- -->
+<div class="container-fluid blog py-5" style="background-color: aliceblue;">
+    <!-- Khung màu hồng -->
+    <div class="container-xl py-8">
+        <!-- Use container-xl for a wider container -->
+        <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 1200px;">
+            <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Everything for the Children</h4>
+            <h1 class="mb-5 display-3">Our Mission to Support and Care for Every Child</h1>
+        </div>
+        <div class="ms-3">
+            <p class="text-justify">
+                At our orphanage, we dedicate ourselves to providing a safe, loving, and nurturing environment for every child. We organize regular activities and events designed to help them grow, learn, and experience joy despite their circumstances. Our goal is to give every child the care, attention, and love they deserve, paving the way for a brighter future. We also believe in fostering a sense of community and belonging, where each child is valued for their unique qualities. By offering not only shelter but also education, emotional support, and guidance, we empower them to unlock their full potential. Through these efforts, we aim to instill hope and resilience, helping them build a foundation for success in life.
+                With the continuous support of our staff, volunteers, and donors, we strive to create an environment where every child can thrive—physically, mentally, and emotionally. Together, we are shaping a brighter tomorrow, one child at a time.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="donateModalLabel">Donate Now</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung modal -->
+                <form id="donationForm">
+                    <!-- Amount Section -->
+                    <div class="mb-3">
+                        <label for="amountSelect" class="form-label">Amount</label>
+                        <select class="form-select" id="amountSelect" required>
+                            <!-- Các tùy chọn sẽ được thêm động từ JavaScript -->
+                        </select>
+                        <input type="number" class="form-control mt-2 hidden" id="customAmount" placeholder="Enter custom amount">
+                    </div>
+
+                    <!-- Currency Section -->
+                    <div class="mb-3">
+                        <label for="currencySelect" class="form-label">Currency</label>
+                        <select class="form-select" id="currencySelect" required>
+                            <option value="VND" selected>VND</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="JPY">JPY</option>
+                        </select>
+                        <span id="currencySymbol" class="ms-2">₫</span>
+                    </div>
+
+                    <!-- Payment Method Section -->
+                    <div class="mb-3">
+                        <label for="paymentMethod" class="form-label">Payment Method</label>
+                        <div>
+                            <input type="radio" id="momo" name="paymentMethod" value="MoMo" checked>
+                            <label for="momo" class="form-label">MoMo</label>
+                            <input type="radio" id="bank" name="paymentMethod" value="Bank Transfer">
+                            <label for="bank" class="form-label">Bank Transfer</label>
+                        </div>
+                        <div id="paymentDetails" class="mt-3">
+                        </div>
+                    </div>
+
+                    <!-- Name Section -->
+                    <div class="mb-3">
+                        <label for="donorName" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="donorName" placeholder="Enter your full name" required>
+                    </div>
+
+                    <!-- Email Section -->
+                    <div class="mb-3">
+                        <label for="donorEmail" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="donorEmail" placeholder="Enter your email" required>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">Donate Now</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cảm Ơn -->
+<div class="modal fade" id="thankYouModal" tabindex="-1" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="thankYouModalLabel">Thank You for Your Donation!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Dear <span id="donorNameThankYou"></span>,</p>
+                <p>Thank you for your generous donation of <span id="donationAmountThankYou"></span> <span id="currencySymbolThankYou"></span>.</p>
+                <p>Your support is greatly appreciated!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+     var videoSrc;
+     var videoModal = document.getElementById('videoModal');
+
+     // Lấy link video khi nhấn nút
+    document.querySelector('.btn-play').addEventListener('click', function () {
+         videoSrc = this.getAttribute("data-src");
+    });
+
+     // Gán link khi modal mở
+    videoModal.addEventListener('shown.bs.modal', function () {
+         var iframe = videoModal.querySelector('#video');
+         iframe.src = videoSrc;
+    });
+        // ===================== Donation Amount & Currency Handling ===================== //
+            setupDonationEvents();
+    setupPaymentMethodEvents();
+
+    async function setupDonationEvents() {
+        const amountSelect = document.getElementById("amountSelect");
+        const customAmountInput = document.getElementById("customAmount");
+        const currencySelect = document.getElementById("currencySelect");
+        const currencySymbol = document.getElementById("currencySymbol");
+
+        if (!amountSelect || !customAmountInput || !currencySelect || !currencySymbol) {
+            console.error("Donation elements not found.");
+            return;
+        }
+
+        // Currency symbols
+        const currencySymbols = {
+            "VND": "₫",
+            "USD": "$",
+            "EUR": "€",
+            "JPY": "¥"
+        };
+
+        // Fetch exchange rates from API
+        let exchangeRates = {};
+        try {
+            const response = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+            const data = await response.json();
+            exchangeRates = data.rates;
+        } catch (error) {
+            console.error("Error fetching exchange rates:", error);
+            exchangeRates = { "USD": 1, "EUR": 0.85, "JPY": 110, "VND": 23000 }; // Fallback rates
+        }
+
+        // Base VND amount for conversion
+        const baseVND = 10000;
+
+        // Function to update currency symbol and amount options
+        function updateCurrency() {
+            const selectedCurrency = currencySelect.value;
+
+            // Update currency symbol
+            currencySymbol.textContent = currencySymbols[selectedCurrency] || "$";
+
+            // Generate amount options based on exchange rates
+            const amountOptions = {
+                "VND": [baseVND, baseVND * 2.5, baseVND * 5, baseVND * 10],
+                "USD": [baseVND / exchangeRates["VND"], (baseVND * 2.5) / exchangeRates["VND"], (baseVND * 5) / exchangeRates["VND"], (baseVND * 10) / exchangeRates["VND"]],
+                "EUR": [baseVND / exchangeRates["EUR"], (baseVND * 2) / exchangeRates["EUR"], (baseVND * 5) / exchangeRates["EUR"], (baseVND * 10) / exchangeRates["EUR"]],
+                "JPY": [baseVND / exchangeRates["JPY"], (baseVND * 2.5) / exchangeRates["JPY"], (baseVND * 5) / exchangeRates["JPY"], (baseVND * 10) / exchangeRates["JPY"]],
+            };
+
+            // Clear existing options in amount select
+            amountSelect.innerHTML = "";
+
+            // Add new options based on selected currency
+            amountOptions[selectedCurrency].forEach(amount => {
+                const option = document.createElement("option");
+                option.value = Math.round(amount); // Round for better readability
+                option.textContent = Math.round(amount).toLocaleString(); // Format numbers
+                amountSelect.appendChild(option);
+            });
+
+            // Add "Custom Amount" option
+            const customOption = document.createElement("option");
+            customOption.value = "custom";
+            customOption.textContent = "Other Amount";
+            amountSelect.appendChild(customOption);
+        }
+
+        // Show/hide custom amount field
+        amountSelect.addEventListener("change", function () {
+            customAmountInput.classList.toggle("hidden", this.value !== "custom");
+        });
+
+        // Update currency when selection changes
+        currencySelect.addEventListener("change", updateCurrency);
+
+        // Initialize default values
+        updateCurrency();
+    }
+
+    // ===================== Payment Method Handling ===================== //
+
+    function setupPaymentMethodEvents() {
+        const momoRadio = document.getElementById("momo");
+        const bankRadio = document.getElementById("bank");
+        const paymentDetailsContainer = document.getElementById("paymentDetails");
+        const amountSelect = document.getElementById("amountSelect");
+        const customAmountInput = document.getElementById("customAmount");
+
+        if (!momoRadio || !bankRadio || !paymentDetailsContainer || !amountSelect) {
+            console.error("Payment method elements not found.");
+            return;
+        }
+
+        function generateVietQR(amount) {
+            const bankCode = "VCB"; // Vietcombank
+            const accountNumber = "0881000478903";
+            const accountName = "Đặng Lâm Thế Nhân";
+            const vietQRUrl = `https://img.vietqr.io/image/${bankCode}-${accountNumber}-qr_only.png?amount=${amount}&addInfo=Donation`;
+
+        return `
+            <p class="text-lg font-semibold text-gray-700 text-center">Ngân hàng: Vietcombank</p>
+            <p class="text-lg font-semibold text-gray-700 text-center">Số tài khoản: ${accountNumber}</p>
+            <p class="text-lg font-semibold text-gray-700 text-center">Chủ tài khoản: ${accountName}</p>
+                <div class="flex justify-center items-center mt-4">
+        <img src="${vietQRUrl}" alt="QR Chuyển khoản" style="width: 450px; height: 450px;">
+    </div>
+        `;
+
+
+        }
+
+            async function generateMoMoQR(amount) {
+                const momoApiUrl = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
+                const secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";  // Secret key của bạn
+                const accessKey = "F8BBA842ECF85";  // Access key của bạn
+                const partnerCode = "MOMO";  // Partner code của bạn
+                const returnUrl = "http://localhost:5172/Checkout/PaymentCallBack";  // URL trả về
+                const notifyUrl = "http://localhost:5172/Checkout/MomoNotify";  // URL thông báo
+                const requestType = "captureMoMoWallet";  // Loại yêu cầu
+
+                // Tạo dữ liệu yêu cầu
+                const requestBody = {
+                    partnerCode,
+                    accessKey,
+                    secretKey,
+                    amount,
+                    orderId: `${new Date().getTime()}`,  // ID đơn hàng (timestamp)
+                    orderInfo: "Donation for the cause",  // Mô tả đơn hàng
+                    returnUrl,
+                    notifyUrl,
+                    requestType
+                };
+
+                // Mã hoá dữ liệu với Secret Key (HMAC SHA256)
+                const signature = generateSignature(requestBody, secretKey); // Bạn cần viết hàm này
+
+                // Thêm chữ ký vào dữ liệu yêu cầu
+                requestBody.signature = signature;
+
+                try {
+                    // Gửi yêu cầu POST tới MoMo API
+                    const response = await fetch(momoApiUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    const data = await response.json();
+
+                    console.log(data);  // Debug: Kiểm tra kết quả trả về từ MoMo API
+
+                    if (data.errorCode === 0) {
+                        // Nếu trả về thành công, lấy URL QR code
+                        const momoQRCodeUrl = data.payUrl;  // URL QR code MoMo
+                        return `
+                            <div class="text-center">
+                                <p class="text-lg font-semibold text-gray-700">Số điện thoại MoMo: 0915221018</p>
+                                <div class="flex justify-center items-center mt-4">
+                                    <img src="${momoQRCodeUrl}" alt="MoMo QR" class="w-40 h-40">
+                                </div>
+                                <p class="text-sm text-gray-500 mt-2">Vui lòng quét mã QR để thanh toán cho mục đích quyên góp.</p>
+                            </div>
+                        `;
+                    } else {
+                        console.error("Error generating MoMo QR code:", data.errorMessage);
+                        return `<p class="text-red-500 text-center">Failed to generate MoMo QR code</p>`;
+                    }
+                } catch (error) {
+                    console.error("Error with MoMo API:", error);
+                    return `<p class="text-red-500 text-center">An error occurred while generating the QR code.</p>`;
+                }
+            }
+
+            // Hàm để tạo chữ ký (Signature) sử dụng Secret Key (HMAC SHA256)
+            function generateSignature(data, secretKey) {
+                const crypto = require('crypto');  // Dùng thư viện crypto để tạo mã HMAC SHA256
+                const dataString = JSON.stringify(data);  // Chuyển đổi dữ liệu sang chuỗi JSON
+                return crypto.createHmac('sha256', secretKey)
+                             .update(dataString)
+                             .digest('hex');  // Mã hoá dữ liệu và trả về kết quả dưới dạng hex
+            }
+
+
+        function updatePaymentFields() {
+            // Get selected amount
+            let selectedAmount = amountSelect.value === "custom" ? customAmountInput.value : amountSelect.value;
+
+            // Ensure amount is valid
+            if (!selectedAmount || isNaN(selectedAmount) || selectedAmount <= 0) {
+                paymentDetailsContainer.innerHTML = `<p class="text-red-500 text-center">Vui lòng nhập số tiền hợp lệ.</p>`;
+                return;
+            }
+
+            // Clear previous content
+            paymentDetailsContainer.innerHTML = "";
+
+            if (momoRadio.checked) {
+                paymentDetailsContainer.innerHTML = generateMoMoQR(selectedAmount);
+            } else if (bankRadio.checked) {
+                paymentDetailsContainer.innerHTML = generateVietQR(selectedAmount);
+            }
+        }
+
+        momoRadio.addEventListener("change", updatePaymentFields);
+        bankRadio.addEventListener("change", updatePaymentFields);
+        amountSelect.addEventListener("change", updatePaymentFields);
+        customAmountInput.addEventListener("input", updatePaymentFields);
+    }
+    // JavaScript code to handle the donation form and show the Thank You Modal
+    document.getElementById("donationForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Ngừng sự kiện gửi form mặc định
+
+        // Lấy dữ liệu từ form
+        const donorName = document.getElementById("donorName").value;
+        const donorEmail = document.getElementById("donorEmail").value;
+        const amount = document.getElementById("amountSelect").value;
+        const currency = document.getElementById("currencySelect").value;
+
+        // Cập nhật thông tin vào modal cảm ơn
+        document.getElementById("donorNameThankYou").innerText = donorName;
+        document.getElementById("donationAmountThankYou").innerText = amount;
+        document.getElementById("currencySymbolThankYou").innerText = currency;
+        document.getElementById("donorEmailThankYou").innerText = donorEmail;
+    // Cập nhật thông tin vào modal cảm ơn
+        document.getElementById("donorNameThankYou").innerText = donorName;
+        document.getElementById("donationAmountThankYou").innerText = new Intl.NumberFormat().format(amount);
+        document.getElementById("currencySymbolThankYou").innerText = currencySymbols[currency] || currency;
+
+        // Đóng modal donate
+        const donateModal = new bootstrap.Modal(document.getElementById("donateModal"));
+        donateModal.hide();
+
+        // Mở modal cảm ơn
+        const thankYouModal = new bootstrap.Modal(document.getElementById("thankYouModal"));
+        thankYouModal.show();
+    });
+</script>

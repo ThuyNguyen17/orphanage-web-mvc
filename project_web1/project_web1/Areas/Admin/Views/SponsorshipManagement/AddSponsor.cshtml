@@ -1,0 +1,91 @@
+﻿@model project_web1.Models.NhaTaiTroViewModel
+
+
+@{
+    ViewData["Title"] = "Thêm Nhà Tài Trợ";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/sponsor.css">
+<section id="content">
+    <main>
+        <div class="head-title">
+            <div class="left">
+                <h1>Quản lý Nhà Tài Trợ</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" asp-action="Index">Danh sách Nhà Tài Trợ</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" asp-action="AddSpon">Thêm mới</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-container fade-in">
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem; color: #1e293b; font-weight: 600;">
+                <i class='bx bx-plus-circle' style="margin-right: 0.5rem;"></i> Thêm Nhà Tài Trợ và Hóa Đơn Tài Trợ
+            </h2>
+
+            <form asp-action="AddSponsor" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label asp-for="NhaTaiTro.Ten" class="required"></label>
+                        <input asp-for="NhaTaiTro.Ten" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" />
+                        <span asp-validation-for="NhaTaiTro.Ten" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="NhaTaiTro.ToChuc"></label>
+                        <input asp-for="NhaTaiTro.ToChuc" class="form-control" />
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="NhaTaiTro.NgaySinh"></label>
+                        <input asp-for="NhaTaiTro.NgaySinh" class="form-control" type="date" />
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="NhaTaiTro.Sdt"></label>
+                        <input asp-for="NhaTaiTro.Sdt" class="form-control" pattern="0[0-9]{9}" title="Số điện thoại 10 số bắt đầu bằng 0" />
+                        <span asp-validation-for="NhaTaiTro.Sdt" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="HoaDonTaiTro.SoTien" class="required"></label>
+                        <input asp-for="HoaDonTaiTro.SoTien" class="form-control" placeholder="Ví dụ: 100000" min="1000" />
+                        <span asp-validation-for="HoaDonTaiTro.SoTien" class="text-danger"></span>
+                    </div>
+                    <div class="form-row">
+                        <label asp-for="NhaTaiTro.DiaChi"></label>
+                        <input asp-for="NhaTaiTro.DiaChi" class="form-control"  />
+                        <span asp-validation-for="NhaTaiTro.DiaChi" class="text-danger"></span>
+                    </div>
+                    <div class="form-row">
+                        <label asp-for="NhaTaiTro.GhiChu"></label>
+                        <input asp-for="NhaTaiTro.GhiChu" class="form-control" />
+                        <span asp-validation-for="NhaTaiTro.GhiChu" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class='bx bx-x btn-icon'></i> Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class='bx bx-save btn-icon'></i> Lưu thông tin
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </main>
+</section>

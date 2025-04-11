@@ -1,0 +1,29 @@
+﻿@model MomoExecuteResponseModel
+
+@{
+    ViewData["Title"] = "Kết quả thanh toán";   
+}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Thông tin giao dịch</h5>
+            <p class="card-text">Mã đơn hàng: @Model.OrderId</p>
+            <p class="card-text">Số tiền: @Model.Amount</p>
+            <p class="card-text">Thông tin đơn hàng: @Model.OrderInfo</p>
+            <p class="card-text">
+                Trạng thái giao dịch:
+                @if (ViewBag.ResultCode == "0")
+                {
+                    <span class="text-success">Thanh toán thành công</span>
+                }
+                else
+                {
+                    <span class="text-danger">Thanh toán thất bại hoặc bị hủy</span>
+                }
+            </p>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Trở về trang chủ</a>
+    </div>
+</div>

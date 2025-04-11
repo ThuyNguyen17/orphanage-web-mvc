@@ -1,0 +1,422 @@
+﻿@using project_web1.Areas.Admin.Models
+@{
+    ViewData["Title"] = "Chỉnh sửa thông tin trẻ";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+@model TreHoSoViewModel
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Baloo+2:wght@500;600;700&display=swap" rel="stylesheet">
+
+<section id="content">
+    <main>
+        <div class="head-title mb-4">
+            <div class="left">
+                <h1>Dashboard</h1>
+                <ul class="breadcrumb">
+                    <li><a href="#">Dashboard</a></li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li><a class="active" asp-action="Index">Quản lý trẻ em</a></li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li><a class="active" asp-action="EditChild">Chỉnh sửa</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Profile Details Section -->
+        <form asp-action="Update" asp-controller="ManageChildren" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <input type="hidden" asp-for="@Model.Item1.MaSoTre" />
+
+            <div class="child-profile-container">
+                <!-- Profile Header Section -->
+                <div class="profile-header">
+                    <div class="profile-badge">
+                        <span class="badge bg-primary text-dark shadow-sm">
+                            MS: @Model.Item1.MaSoTre
+                        </span>
+                    </div>
+                    <div class="profile-identity">
+                        <div class="avatar-upload">
+                            <div class="avatar-edit">
+                                <input type="file" id="imageUpload" name="AnhDaiDienFile" accept="image/*" />
+                                <label for="imageUpload"><i class="fas fa-camera"></i></label>
+                            </div>
+                            <div class="avatar-preview">
+                                <div id="imagePreview"
+                                     style="background-image: url('@Url.Content("~/images/" + (Model.Item1.AnhDaiDien ?? "default.jpg"))');">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-name-container">
+                            <input asp-for="Item1.HoTen" class="profile-name-input" placeholder="Nhập họ tên" required />
+                        </div>
+                    </div>
+
+                    <div class="profile-meta">
+                        <div class="meta-item">
+                            <select asp-for="@Model.Item1.TrangThai" class="form-select meta-select">
+                                <option value="Trung Tam">Đang ở trung tâm</option>
+                                <option value="Nhan Nuoi">Đã nhận nuôi</option>
+                            </select>
+                        </div>
+                        <div class="meta-item">
+                            <select asp-for="@Model.Item1.GioiTinh" class="form-select meta-select">
+                                <option value="Nam">Nam</option>
+                                <option value="Nu">Nữ</option>
+                            </select>
+                        </div>
+                        <div class="meta-item">
+                            <input asp-for="@Model.Item1.NgaySinh" type="date" class="form-control meta-input" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Details -->
+                <div class="profile-details">
+                    <div class="details-section">
+                        <h5 class="section-title">
+                            <i class="fas fa-info-circle me-2"></i>Thông tin chi tiết
+                        </h5>
+                        <div class="section-divider"></div>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Ngày nhập trung tâm</div>
+                                <div class="info-value">
+                                    <input asp-for="@Model.Item1.NgayNhapTrungTam" type="date" class="form-control flat-input" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-section">
+                        <h5 class="section-title">
+                            <i class="fas fa-heartbeat me-2"></i>Thông tin sức khỏe
+                        </h5>
+                        <div class="section-divider"></div>
+
+                        <div class="info-list">
+                            <div class="info-item">
+                                <div class="info-label">Tình trạng sức khỏe</div>
+                                <div class="info-value">
+                                    <input asp-for="@Model.Item2.TinhTrangSucKhoe" class="form-control flat-input" required />
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-label">Cân nặng</div>
+                                <div class="info-value">
+                                    <input asp-for="@Model.Item2.CanNang" type="number" class="form-control flat-input" required />
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <div class="info-label">Chiều cao</div>
+                                <div class="info-value">
+                                    <input asp-for="@Model.Item2.ChieuCao" type="number" class="form-control flat-input" required />
+                                    <span class="input-group-text">cm</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Dị Ứng</div>
+                                <div class="info-value">
+                                    <input asp-for="@Model.Item2.DiUng" class="form-control flat-input" />
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Nhân Viên Y Tế</div>
+                                <div class="info-value">
+                                    <input asp-for="@Model.Item2.Idnvyte" type="number" class="form-control flat-input" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a asp-action="Index" asp-route-id="@Model.Item1.MaSoTre" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+   
+    </main>
+</section>
+
+@section Styles {
+    <style>
+        /* Main Container */
+        .child-profile-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .profile-identity {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Avatar Upload */
+        .avatar-upload {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem;
+        }
+
+        .avatar-edit {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            z-index: 1;
+        }
+
+            .avatar-edit input {
+                display: none;
+            }
+
+            .avatar-edit label {
+                display: inline-block;
+                width: 40px;
+                height: 40px;
+                margin-bottom: 0;
+                border-radius: 50%;
+                background: #4a6cf7;
+                color: white;
+                cursor: pointer;
+                font-size: 1rem;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s;
+            }
+
+                .avatar-edit label:hover {
+                    transform: scale(1.1);
+                }
+
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+            .avatar-preview > div {
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                border-radius: 50%;
+            }
+
+        /* Profile Name Input */
+        .profile-name-container {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 1rem;
+        }
+
+        .profile-name-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2d3748;
+            padding: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+            .profile-name-input:focus {
+                outline: none;
+                border-color: #4a6cf7;
+            }
+
+        /* Profile Meta */
+        .profile-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            min-width: 120px;
+        }
+
+        .meta-select, .meta-input {
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .meta-select {
+            cursor: pointer;
+        }
+
+        /* Profile Details */
+        .profile-details {
+            padding: 2rem;
+        }
+
+        .details-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: #4a6cf7;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Info Grid Layout */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Info Items */
+        .info-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: all 0.3s;
+            border: 1px solid #edf2f7;
+        }
+
+            .info-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(74, 108, 247, 0.1);
+                border-color: #c3dafe;
+            }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Flat Input Style */
+        .flat-input {
+            border: none;
+            background: transparent;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+            .flat-input:focus {
+                outline: none;
+                border-color: #4a6cf7;
+            }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 768px) {
+            .profile-header {
+                padding: 1.5rem;
+            }
+
+            .profile-details {
+                padding: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .avatar-upload {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-name-input {
+                font-size: 1.5rem;
+            }
+
+            .form-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+}
+@section Scripts {
+    <script>
+        document.getElementById("imageUpload").addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("imagePreview").style.backgroundImage = `url('${e.target.result}')`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

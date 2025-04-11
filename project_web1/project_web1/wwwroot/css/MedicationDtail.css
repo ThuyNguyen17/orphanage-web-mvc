@@ -1,0 +1,249 @@
+﻿/* Medication.css */
+.stat-card {
+    background-color: #ffffff;
+    border: 1px solid #d1e7ff;
+    border-left: 5px solid #0d6efd;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.1);
+    transition: 0.3s ease;
+}
+
+    .stat-card:hover {
+        box-shadow: 0 6px 14px rgba(13, 110, 253, 0.15);
+        transform: translateY(-2px);
+    }
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #e7f1ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d6efd;
+    font-size: 20px;
+}
+
+.stat-card h6 {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.stat-card h3 {
+    font-size: 1.5rem;
+    color: #000000;
+    margin-top: 4px;
+}
+
+
+/* Các kiểu cho bảng */
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+    .table-custom th,
+    .table-custom td {
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .table-custom th {
+        background-color: #f7f7f7;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .table-custom tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .table-custom td {
+        color: #555;
+    }
+
+    .table-custom .text-primary {
+        color: #007bff;
+    }
+
+/* Các nút thao tác */
+.action-buttons a {
+    margin-right: 8px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .action-buttons a:hover {
+        background-color: #f0f0f0;
+    }
+
+    .action-buttons a i {
+        font-size: 16px;
+    }
+
+/* Phần lọc */
+.search-box input,
+.search-box .input-group-text {
+    border-radius: 30px;
+}
+
+.search-box {
+    width: 100%;
+}
+
+.supplier-badge {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+    .supplier-badge i {
+        margin-right: 5px;
+    }
+/* Medication.css */
+
+/* Các kiểu cho bảng */
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+    .table-custom th,
+    .table-custom td {
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .table-custom th {
+        background-color: #f7f7f7;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .table-custom tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .table-custom td {
+        color: #555;
+    }
+
+    .table-custom .text-primary {
+        color: #007bff;
+    }
+
+/* Các nút thao tác */
+.action-buttons a {
+    margin-right: 8px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .action-buttons a:hover {
+        background-color: #f0f0f0;
+    }
+
+    .action-buttons a i {
+        font-size: 16px;
+    }
+
+/* Phần lọc */
+.search-box input,
+.search-box .input-group-text {
+    border-radius: 30px;
+}
+
+.search-box {
+    width: 100%;
+}
+
+.supplier-badge {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+    .supplier-badge i {
+        margin-right: 5px;
+    }
+/* Căn lề, padding và canh giữa */
+.modal-content {
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+    .form-group label {
+        font-weight: 500;
+        color: #333;
+    }
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease-in-out;
+}
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+
+.text-danger {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Nút */
+.modal-footer .btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }

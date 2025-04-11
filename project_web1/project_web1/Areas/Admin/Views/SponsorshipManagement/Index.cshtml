@@ -1,0 +1,123 @@
+﻿@using project_web1.Areas.Admin.Models
+
+
+@model IEnumerable<SponsorViewModel>
+
+@{
+    ViewData["Title"] = "Quản Lý Tài Trợ";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+    decimal totalAmount = ViewBag.TotalAmount;
+
+
+}
+<link rel="stylesheet" href="~/css/sponsor.css">
+
+<section id="content">
+    <main>
+        <div class="head-title">
+            <div class="left">
+                <h1>Dashboard</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" asp-action="Index">Sponsorship Management</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Stats Card -->
+        <div class="stats-card fade-in">
+            <div class="stats-content">
+                <div class="stats-icon"><i class='bx bx-dollar-circle'></i></div>
+                <div class="stats-info">
+                    <h3>Tổng số tiền tài trợ</h3>
+                    <p class="stats-value">@totalAmount.ToString("N0") <span class="stats-currency">VND</span></p>
+                </div>
+            </div>
+            <div class="stats-trend">
+                <i class='bx bx-trending-up' style="font-size: 2rem; color: var(--success);"></i>
+            </div>
+        </div>
+
+        <!-- Search and Table -->
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class='bx bx-search search-icon'></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm theo tên, tổ chức hoặc số điện thoại...">
+            </div>
+            <a class="btn" style="background-color: var(--primary); color: white;" asp-action="AddSponsor">
+                <i class='bx bx-plus btn-icon'></i> Thêm mới
+            </a>
+        </div>
+
+        <div class="table-container">
+            <table class="data-table" id="sponsorTable">
+                <thead>
+                    <tr>
+                        <th>Tên nhà tài trợ</th>
+                        <th>Tổ chức</th>
+                        <th>Ngày sinh</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                        <th>Ghi Chú</th>
+                        <th>Tổng số tiền</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr class="fade-in">
+                                <td data-label="Tên">
+                                    <div style="font-weight: 600;">@item.NhaTaiTro.Ten</div>
+                                </td>
+                                <td data-label="Tổ chức">@(string.IsNullOrEmpty(item.NhaTaiTro.ToChuc) ? "Cá nhân" : item.NhaTaiTro.ToChuc)</td>
+                                <td data-label="Ngày sinh">
+                                    @item.NhaTaiTro.NgaySinh?.ToString("dd/MM/yyyy")
+                                </td>
+                                <td data-label="Địa chỉ">@item.NhaTaiTro.DiaChi</td>
+                                <td data-label="Điện thoại">@item.NhaTaiTro.Sdt</td>
+                                <td data-label="Ghi Chú">@item.NhaTaiTro.GhiChu</td>
+                                <td data-label="Tổng tiền"><span class="amount-badge">@item.TotalAmount.ToString("N0") VND</span></td>
+                                <td data-label="Thao tác">
+                                    <div class="action-btns">
+
+                                        <a class="btn btn-view"
+                                           asp-action="DetailsSpon"
+                                           asp-controller="SponsorshipManagement"
+                                           asp-route-id="@item.NhaTaiTro.MaSoNtt">
+                                            <i class="bx bx-show"></i> Xem
+                                        </a>
+                                        <a asp-action="EditSpon" asp-controller="SponsorshipManagement" asp-route-id="@item.NhaTaiTro.MaSoNtt" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i> Sửa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <i class='bx bx-package empty-icon'></i>
+                                    <h3 class="empty-title">Không có dữ liệu tài trợ</h3>
+                                    <p class="empty-text">Hiện không có nhà tài trợ nào trong hệ thống. Bạn có thể thêm mới bằng cách nhấn nút "Thêm mới"</p>
+                                    <a class="btn" style="background-color: var(--primary); color: white;" asp-action="AddSponsor">
+                                        <i class='bx bx-plus btn-icon'></i> Thêm nhà tài trợ
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </main>
+</section>

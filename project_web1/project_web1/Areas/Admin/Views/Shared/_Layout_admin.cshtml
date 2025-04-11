@@ -1,0 +1,156 @@
+﻿@{
+    ViewData["Title"] = "Layout_Admin";
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}
+@using Microsoft.AspNetCore.Identity
+@using project_web1.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Sidebar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ENjdO4Dr2bkBIFxQpeoE1kzWZ2iDkL5q5S9u3mM0l7Anm7ArlC/tWRTMNHcN0aO4"
+          crossorigin="anonymous">
+
+    <!-- Boxicons, FontAwesome, Google Fonts… -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind (nếu cần) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    @RenderSection("Styles", required: false)
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <!-- Custom JS -->
+    <script src="~/js/areasAdmin.js"></script>
+</head>
+
+<body>
+    <aside id="sidebar">
+        <input type="checkbox" id="toggler" hidden>
+        <label for="toggler" class="toggle-btn">
+            <i class="bi bi-microsoft"></i>
+            <span>Orphans</span>
+        </label>
+        <ul class="sidebar-nav">
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-controller="AdminHome" asp-action="Index">
+                    <i class="fa fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-controller="ManageChildren" asp-action="Index">
+                    <i class="fa fa-baby"></i>
+                    <span>Manage Children</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-controller="ScheduleCheckup" asp-action="Index">
+                    <i class="fa fa-calendar-alt"></i>
+                    <span>Schedule Checkup</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-controller="Event" asp-action="Index">
+                    <i class="fa fa-calendar-check-o"></i>
+                    <span>Event</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-controller="SponsorshipManagement" asp-action="Index">
+                    <i class="fa fa-donate"></i>
+                    <span>Sponsorship Management</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-controller="Adopter" asp-action="Index">
+                    <i class="fa fa-user-friends"></i>
+                    <span>Adopter Management</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" asp-controller="MedicationManagement" asp-action="Index">
+                    <i class="fa fa-pills"></i>
+                    <span>Medication Management</span>
+                </a>
+            </li>
+            <li class="sidebar-item dropdown">
+                <button class="sidebar-link dropdown-toggle" id="settingsDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="settingsDropdown">
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" asp-area="Admin" asp-controller="Settings" asp-action="AccountInfo" asp-route-id="@UserManager.GetUserId(User)">
+                            <i class="fas fa-user"></i>
+                            <span>Account Information</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" asp-area="Admin" asp-controller="Settings" asp-action="Notifications" asp-route-id="@UserManager.GetUserId(User)">
+                            <i class="fas fa-bell"></i>
+                            <span>Notification</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" asp-area="Admin" asp-controller="Settings" asp-action="ChangePasswords" asp-route-id="@UserManager.GetUserId(User)">
+                            <i class="fas fa-key"></i>
+                            <span>Change Password</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" asp-area="Admin" asp-controller="Settings" asp-action="SecurityPrivacy" asp-route-id="@UserManager.GetUserId(User)">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Security & Privacy</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+                <p>@UserManager.GetUserName(User)</p>
+                <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                    <button type="submit" class="btn btn-link">Logout</button>
+                </form>
+        </div>
+    </aside>
+    <div class="main-content">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+    @RenderSection("Scripts", required: false)
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+            integrity="sha384-Q6EAfBjCYoJl3Rm7I3Bxjz6WblGJHj1y5fKxDznP7/jzsywFv3TpHTPIcVI8G7pG"
+            crossorigin="anonymous"></script>
+</body>
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdownToggle = document.querySelector('#settingsDropdown');
+        const dropdownMenu = dropdownToggle.nextElementSibling;
+
+        // Bật/Tắt trạng thái show khi click vào dropdown
+        dropdownToggle.addEventListener('click', function (e) {
+            e.preventDefault(); // Ngăn ngừa hành động mặc định
+            dropdownMenu.classList.toggle('show'); // Toggle lớp 'show' để hiển thị hoặc ẩn menu
+        });
+    });
+</script>

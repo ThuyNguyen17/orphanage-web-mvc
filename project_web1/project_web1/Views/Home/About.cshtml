@@ -1,0 +1,121 @@
+﻿<!-- About Start -->
+<div class="container-fluid py-5 about bg-light">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5 wow fadeIn" data-wow-delay="0.1s">
+                <div class="video border position-relative">
+                    <button type="button" class="btn btn-play" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/ukHK1GVyr0I" data-bs-target="#videoModal">
+                        <span></span>
+                    </button>
+                    <img src="~/images/main/video_background.png" class="img-fluid w-100" alt="Children at Sunshine Orphan Center">
+                    <div class="position-absolute bottom-0 start-0 p-3 bg-primary text-white">
+                        <i class="fas fa-heart me-2"></i> 100+ Children Cared For
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 wow fadeIn" data-wow-delay="0.3s">
+                <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Our Journey</h4>
+                <h1 class="text-dark mb-4 display-5">A Home Built on Love Since 2004</h1>
+                <p class="text-dark mb-4">
+                    Founded in 2004, Sunshine Orphan Center was born from a simple but profound commitment - to create
+                    a safe haven where every child could experience love, security, and hope. What began as a modest
+                    shelter has blossomed into a vibrant home for over 100 children, offering not just basic needs but
+                    the foundation for brighter futures.
+                </p>
+
+                <div class="milestones mb-5">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="d-flex p-3 border border-primary rounded bg-white h-100">
+                                <i class="fas fa-home fa-2x text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h5>Safe Shelter</h5>
+                                    <p class="mb-0">From a small house to a nurturing home for 100+ children</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex p-3 border border-primary rounded bg-white h-100">
+                                <i class="fas fa-book fa-2x text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h5>Education</h5>
+                                    <p class="mb-0">Comprehensive schooling and vocational programs</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex p-3 border border-primary rounded bg-white h-100">
+                                <i class="fas fa-heartbeat fa-2x text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h5>Healthcare</h5>
+                                    <p class="mb-0">Regular medical care and emotional support</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex p-3 border border-primary rounded bg-white h-100">
+                                <i class="fas fa-smile fa-2x text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h5>Healing</h5>
+                                    <p class="mb-0">Counseling and activities to restore joy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-statement p-4 border border-primary rounded bg-white">
+                    <h5 class="text-primary"><i class="fas fa-star me-2"></i>Our Promise</h5>
+                    <p class="mb-0">
+                        We believe every child deserves a childhood filled with love, learning, and laughter.
+                        Our mission goes beyond shelter - we're building futures, restoring hope, and creating
+                        lasting change, one precious life at a time.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+<!-- Video Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-0">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="videoModalLabel">Our Story: Nau An Cho Em</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="video" class="embed-responsive-item" src="" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <small>See how we've transformed lives since 2005</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script xử lý video modal -->
+<script>
+    var videoSrc;
+    var videoModal = document.getElementById('videoModal');
+
+    // Lấy link video khi nhấn nút
+    document.querySelector('.btn-play').addEventListener('click', function () {
+        videoSrc = this.getAttribute("data-src");
+    });
+
+    // Gán link khi modal mở
+    videoModal.addEventListener('shown.bs.modal', function () {
+        var iframe = videoModal.querySelector('#video');
+        iframe.src = videoSrc;
+    });
+
+    // Reset lại khi đóng
+    videoModal.addEventListener('hide.bs.modal', function () {
+        var iframe = videoModal.querySelector('#video');
+        iframe.src = "";
+    });
+</script>

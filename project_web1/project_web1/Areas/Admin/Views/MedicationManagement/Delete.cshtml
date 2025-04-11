@@ -1,0 +1,35 @@
+﻿@model project_web1.Models.ThuocMuaNgoai
+@{
+    ViewData["Title"] = "Xóa phiếu mua thuốc";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow rounded-4 border-danger">
+        <div class="card-header bg-danger text-white rounded-top-4">
+            <h3 class="mb-0">@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            <h5 class="text-danger mb-4">Bạn có chắc chắn muốn xóa phiếu sau không?</h5>
+
+            <dl class="row">
+                <dt class="col-sm-4 fw-bold text-secondary">📅 Ngày mua</dt>
+                <dd class="col-sm-8">@Model.NgayMua?.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-4 fw-bold text-secondary">🏪 Nơi mua</dt>
+                <dd class="col-sm-8">@Model.NoiMua</dd>
+
+                <dt class="col-sm-4 fw-bold text-secondary">💰 Tổng tiền</dt>
+                <dd class="col-sm-8">@Model.TongTien?.ToString("N0") VNĐ</dd>
+            </dl>
+
+            <form asp-action="Delete" method="post" class="mt-4">
+                <input type="hidden" asp-for="MaSoMuaThuoc" />
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-danger px-4">Xóa</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

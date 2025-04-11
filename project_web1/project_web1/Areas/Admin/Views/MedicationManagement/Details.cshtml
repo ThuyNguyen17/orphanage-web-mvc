@@ -1,0 +1,127 @@
+﻿@model ThuocMuaNgoai
+
+@{
+    ViewData["Title"] = "Chi tiết phiếu mua thuốc";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/css/MedicationDtail.css" asp-append-version="true" />
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">
+            <i class="fas fa-file-invoice mr-2"></i>@ViewData["Title"] #@Model.MaSoMuaThuoc
+        </h3>
+        <a asp-action="Index" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left mr-1"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="info-box bg-light">
+                    <div class="info-box-content">
+                        <span class="info-box-text text-muted">Ngày mua</span>
+                        <span class="info-box-number">@Model.NgayMua?.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <span class="info-box-icon bg-primary"><i class="far fa-calendar-alt"></i></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="info-box bg-light">
+                    <div class="info-box-content">
+                        <span class="info-box-text text-muted">Tổng tiền</span>
+                        <span class="info-box-number text-success">@Model.TongTien?.ToString("N0") VNĐ</span>
+                    </div>
+                    <span class="info-box-icon bg-success"><i class="fas fa-money-bill-wave"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="callout callout-info">
+                    <h5>
+                        <i class="fas fa-store mr-2"></i>Nơi mua:
+                        @(Model.NoiMua?.Length > 50 ? Model.NoiMua.Substring(0, 50) + "..." : Model.NoiMua)
+                    </h5>
+                    @if (!string.IsNullOrEmpty(Model.GhiChu))
+                    {
+                        <p class="mt-2 mb-0"><i class="fas fa-comment mr-2"></i><strong>Ghi chú:</strong> @Model.GhiChu</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-pills mr-2"></i>Danh sách thuốc đã mua
+                </h3>
+                <div class="card-tools">
+                    <span class="badge badge-primary">@(Model.CtphieuMuas?.Count ?? 0) sản phẩm</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="width: 40%">Tên thuốc</th>
+                                <th class="text-center">Số lượng</th>
+                                <th class="text-right">Đơn giá</th>
+                                <th class="text-right">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.CtphieuMuas != null && Model.CtphieuMuas.Any())
+                            {
+                                foreach (var item in Model.CtphieuMuas)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@item.MaSoThuocNavigation?.TenThuoc</strong>
+                                            @if (!string.IsNullOrEmpty(item.MaSoThuocNavigation?.LieuLuongDeXuat))
+                                            {
+                                                <span class="text-muted ml-2">(@item.MaSoThuocNavigation.LieuLuongDeXuat)</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">@item.SoLuong</td>
+                                        <td class="text-right">@item.Gia?.ToString("N0")</td>
+                                        <td class="text-right text-success font-weight-bold">
+                                            @((item.SoLuong ?? 0 * item.Gia ?? 0).ToString("N0"))
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Không có thuốc nào trong phiếu mua.</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-light">
+                                <th colspan="3" class="text-right">Tổng cộng:</th>
+                                <th class="text-right text-primary">@Model.TongTien?.ToString("N0") VNĐ</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer text-right">
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-list mr-1"></i> Danh sách
+        </a>
+    </div>
+</div>

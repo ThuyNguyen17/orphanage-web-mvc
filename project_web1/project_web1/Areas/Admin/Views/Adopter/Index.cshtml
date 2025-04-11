@@ -1,0 +1,747 @@
+﻿@model project_web1.Models.AdopterViewModel
+@{
+    ViewData["Title"] = "Adopter Management";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+    }
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Muli&display=swap" rel="stylesheet">
+
+    <style>
+        .aura-effect {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .modal:hover .aura-effect {
+            opacity: 1;
+        }
+
+        .table-container {
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .action-btn {
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .modal {
+            z-index: 1000;
+        }
+    </style>
+
+    <section id="content" class="p-6 bg-gray-50 min-h-screen">
+        <main class="max-w-full mx-auto">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Adopter Management</h1>
+                    <nav class="flex text-sm text-gray-600 mt-1">
+                        <a href="#" class="hover:text-blue-600">Dashboard</a>
+                        <span class="mx-2">/</span>
+                        <span class="text-blue-600 font-medium">Manage Adopters</span>
+                    </nav>
+                </div>
+
+                <div class="mt-4 md:mt-0">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-gray-600">Total Adopters:</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                            @Model.Adopters.Count
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <!-- Left Controls -->
+                    <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                        <!-- Sort Dropdown -->
+                        <div class="relative">
+                            <button id="dropdownBtn" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-xs hover:bg-gray-50 transition">
+                                <i class="fas fa-sort text-gray-500"></i>
+                                <span id="selectedText">Sort by</span>
+                                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+                            </button>
+
+                            <ul id="dropdownMenu" class="hidden absolute z-10 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1">
+                                <li class="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2" data-value="maSo_asc" data-text="ID: Low → High">
+                                    <i class="fas fa-sort-numeric-down text-gray-500"></i>
+                                    <span>ID: Low → High</span>
+                                </li>
+                                <li class="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2" data-value="maSo_desc" data-text="ID: High → Low">
+                                    <i class="fas fa-sort-numeric-up text-gray-500"></i>
+                                    <span>ID: High → Low</span>
+                                </li>
+                                <li class="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2" data-value="hoTen_asc" data-text="Name: A → Z">
+                                    <i class="fas fa-sort-alpha-down text-gray-500"></i>
+                                    <span>Name: A → Z</span>
+                                </li>
+                                <li class="px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2" data-value="hoTen_desc" data-text="Name: Z → A">
+                                    <i class="fas fa-sort-alpha-up text-gray-500"></i>
+                                    <span>Name: Z → A</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2">
+                            <button onclick="exportToCSV()" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-xs hover:bg-gray-50 transition">
+                                <i class="fas fa-file-export text-green-600"></i>
+                                <span>Export</span>
+                            </button>
+                            <button onclick="openAddAdoptionModal()" class="flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-lg shadow-xs hover:bg-blue-100 transition">
+                                <i class="fas fa-plus text-blue-600"></i>
+                                <span>Add</span>
+                            </button>
+                            <button onclick="refreshPage()" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-xs hover:bg-gray-50 transition">
+                                <i class="fas fa-sync-alt text-gray-600"></i>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="relative w-full md:w-64">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input type="text" id="search" placeholder="Search by name..."
+                            class="pl-10 pr-4 py-2 w-full border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Table -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="table-container">
+                    <table id="nguoiTable" class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr class="text-left text-gray-600 text-sm font-medium">
+                                <th class="px-6 py-3">ID</th>
+                                <th class="px-6 py-3">Full Name</th>
+                                <th class="px-6 py-3">Birth Date</th>
+                                <th class="px-6 py-3">Phone</th>
+                                <th class="px-6 py-3">Address</th>
+                                <th class="px-6 py-3">Email</th>
+                                <th class="px-6 py-3">Adopted Child</th>
+                                <th class="px-6 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="nguoiNhanNuoiList" class="divide-y divide-gray-100">
+                            @foreach (var nguoi in Model.Adopters)
+                            {
+                                var tre = Model.Children.FirstOrDefault(t => t.MaSoTre == nguoi.MaSoTre);
+                                var tenTre = tre != null ? tre.HoTen : "Not found";
+                                var maSoTre = tre?.MaSoTre ?? 0;
+                                var hoTenTre = tre?.HoTen ?? "No information";
+                                var ngaySinhTre = tre?.NgaySinh;
+                                var gioiTinhTre = tre?.GioiTinh ?? "Unknown";
+                                var ngayNhapTrungTam = tre?.NgayNhapTrungTam;
+                                var trangThaiTre = tre?.TrangThai ?? "None";
+                                var anhDaiDienTre = tre?.AnhDaiDien ?? "";
+
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 font-medium text-gray-700">@nguoi.MaSoNnn</td>
+                                    <td class="px-6 py-4 name">@nguoi.HoTen</td>
+                                    <td class="px-6 py-4">@nguoi.NgaySinh?.ToString("dd/MM/yyyy")</td>
+                                    <td class="px-6 py-4">@nguoi.Sdt</td>
+                                    <td class="px-6 py-4">@nguoi.DiaChi</td>
+                                    <td class="px-6 py-4">@nguoi.Email</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            @if (!string.IsNullOrEmpty(anhDaiDienTre))
+                                            {
+                                                <img src="~/images/@anhDaiDienTre"  class="w-8 h-8 rounded-full object-cover">
+                                            }
+                                        
+                                            <span>@tenTre</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex justify-end gap-3">
+                                            <button onclick="openEditModal('@nguoi.MaSoNnn', '@nguoi.HoTen', '@nguoi.NgaySinh?.ToString("yyyy-MM-dd")', '@nguoi.Sdt', '@nguoi.DiaChi', '@nguoi.Email',
+                                                      '@maSoTre', '@hoTenTre', '@ngaySinhTre?.ToString("yyyy-MM-dd")', '@gioiTinhTre', '@ngayNhapTrungTam?.ToString("yyyy-MM-dd")', '@trangThaiTre', '@anhDaiDienTre')"
+                                                    class="action-btn text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button onclick="deleteNguoiNhanNuoi(@nguoi.MaSoNnn)" class="action-btn text-red-600 hover:text-red-800">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add Adoption Modal -->
+        <div id="addAdoption" class="modal hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Add New Adoption</h2>
+                        <button onclick="closeAddAdoptionModal()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <form id="addAdoptionForm" class="space-y-4">
+                    @Html.AntiForgeryToken()
+
+                        <div>
+                            <label for="adopterName" class="block text-sm font-medium text-gray-700 mb-1">Adopter Name</label>
+                            <input type="text" id="adopterName" name="HoTen" required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="adopterBirthDate" class="block text-sm font-medium text-gray-700 mb-1">Birth Date</label>
+                                <input type="date" id="adopterBirthDate" name="NgaySinh"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition">
+                            </div>
+                            <div>
+                                <label for="adopterPhone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                <input type="text" id="adopterPhone" name="Sdt" required
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="adopterAddress" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <input type="text" id="adopterAddress" name="DiaChi"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition">
+                        </div>
+
+                        <div>
+                            <label for="adopterEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="adopterEmail" name="Email"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition">
+                        </div>
+
+                        <div>
+                            <label for="selectedChild" class="block text-sm font-medium text-gray-700 mb-1">Select Child</label>
+                            <select id="selectedChild" name="MaSoTre" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition">
+                                <option value="">-- Select Child --</option>
+                                @foreach (var child in Model.Children)
+                                {
+                                    <option value="@child.MaSoTre">@child.HoTen (@child.NgaySinh)</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="flex justify-end gap-3 pt-4">
+                            <button type="button" onclick="closeAddAdoptionModal()"
+                                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                                Cancel
+                            </button>
+                            <button type="button" onclick="saveAdoption()"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                Save Adoption
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div id="editModal" class="modal hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 p-4">
+            <div class="relative w-full max-w-5xl bg-gray-900 rounded-xl shadow-2xl overflow-hidden">
+                <!-- Aura Effect -->
+                <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
+                    <div class="aura-effect"></div>
+                </div>
+
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-white">Edit Adopter Information</h2>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <form id="editForm">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
+                            <!-- Original Info Card -->
+                            <div class="card-gradient p-5 rounded-xl shadow-lg">
+                                <h3 class="text-lg font-semibold text-purple-300 mb-4">Original Information</h3>
+                            @Html.AntiForgeryToken()
+                                <div class="grid grid-cols-2 gap-4 text-gray-300">
+                                    <div>
+                                        <p class="text-sm text-gray-400">Adopter ID</p>
+                                        <p id="originalMaSoNnn" class="font-medium"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Full Name</p>
+                                        <p id="originalHoTen" class="font-medium"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Birth Date</p>
+                                        <p id="originalNgaySinh" class="font-medium"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Phone</p>
+                                        <p id="originalSdt" class="font-medium"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Address</p>
+                                        <p id="originalDiaChi" class="font-medium"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-400">Email</p>
+                                        <p id="originalEmail" class="font-medium"></p>
+                                    </div>
+                                </div>
+
+                                <h4 class="text-md font-semibold text-purple-300 mt-6 mb-3">Child Information</h4>
+                                <div class="flex items-start gap-4">
+                                    <img id="originalAnhDaiDienTre" class="w-16 h-16 rounded-lg object-cover border-2 border-purple-400" src="" alt="Child Image">
+                                    <div class="grid grid-cols-2 gap-4 text-gray-300">
+                                        <div>
+                                            <p class="text-sm text-gray-400">Child ID</p>
+                                            <p id="originalMaSoTre" class="font-medium"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Name</p>
+                                            <p id="originalHoTenTre" class="font-medium"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Birth Date</p>
+                                            <p id="originalNgaySinhTre" class="font-medium"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Gender</p>
+                                            <p id="originalGioiTinhTre" class="font-medium"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Entry Date</p>
+                                            <p id="originalNgayNhapTrungTam" class="font-medium"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-400">Status</p>
+                                            <p id="originalTrangThaiTre" class="font-medium"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit Form Card -->
+                            <div class="card-gradient p-5 rounded-xl shadow-lg">
+                                <h3 class="text-lg font-semibold text-purple-300 mb-4">Edit Information</h3>
+                                <input type="hidden" id="editMaSoNnn" name="MaSoNnn">
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-400 mb-1">Full Name</label>
+                                        <input type="text" id="editHoTen" name="HoTen"
+                                               class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm text-gray-400 mb-1">Birth Date</label>
+                                            <input type="date" id="editNgaySinh" name="NgaySinh"
+                                                   class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm text-gray-400 mb-1">Phone</label>
+                                            <input type="text" id="editSdt" name="Sdt"
+                                                   class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm text-gray-400 mb-1">Address</label>
+                                        <input type="text" id="editDiaChi" name="DiaChi"
+                                               class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm text-gray-400 mb-1">Email</label>
+                                        <input type="email" id="editEmail" name="Email"
+                                               class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                                    </div>
+
+                                    <h4 class="text-md font-semibold text-purple-300 mt-6 mb-3">Child Information</h4>
+
+                                    <div>
+                                        <label class="block text-sm text-gray-400 mb-1">Child Name</label>
+                                        <input type="text" id="editHoTenTre" name="HoTenTre"
+                                               class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm text-gray-400 mb-1">Birth Date</label>
+                                            <input type="date" id="editNgaySinhTre" name="NgaySinhTre"
+                                                   class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm text-gray-400 mb-1">Status</label>
+                                            <input type="text" id="editTrangThaiTre" name="TrangThaiTre"
+                                                   class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-3 mt-6">
+                            <button type="button" onclick="closeModal()"
+                                    class="px-6 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-800 transition">
+                                Cancel
+                            </button>
+                            <button type="button" onclick="saveChanges()"
+                                    class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition shadow-lg">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @section Scripts {
+<script>
+    // ============== GLOBAL FUNCTIONS ==============
+        window.openEditModal = function(maSoNnn, hoTen, ngaySinh, sdt, diaChi, email,
+                                       maSoTre, hoTenTre, ngaySinhTre, gioiTinhTre, ngayNhapTrungTam, trangThaiTre, anhDaiDienTre) {
+              const editModal = document.getElementById("editModal");
+              editModal.classList.remove("hidden");
+              document.body.style.overflow = "hidden";
+
+              // Set original values
+              document.getElementById("originalMaSoNnn").textContent = maSoNnn;
+              document.getElementById("originalHoTen").textContent = hoTen;
+              document.getElementById("originalNgaySinh").textContent = ngaySinh;
+              document.getElementById("originalSdt").textContent = sdt;
+              document.getElementById("originalDiaChi").textContent = diaChi;
+              document.getElementById("originalEmail").textContent = email;
+              document.getElementById("originalMaSoTre").textContent = maSoTre;
+              document.getElementById("originalHoTenTre").textContent = hoTenTre;
+              document.getElementById("originalNgaySinhTre").textContent = ngaySinhTre || '';
+              document.getElementById("originalGioiTinhTre").textContent = gioiTinhTre;
+              document.getElementById("originalNgayNhapTrungTam").textContent = ngayNhapTrungTam || '';
+              document.getElementById("originalTrangThaiTre").textContent = trangThaiTre;
+
+              const childImage = document.getElementById("originalAnhDaiDienTre");
+              childImage.src = anhDaiDienTre ? `/images/${anhDaiDienTre}` : '/images/deffffavatar.png';
+
+
+              // Set editable values
+              document.getElementById("editMaSoNnn").value = maSoNnn;
+              document.getElementById("editHoTen").value = hoTen;
+              document.getElementById("editNgaySinh").value = ngaySinh;
+              document.getElementById("editSdt").value = sdt;
+              document.getElementById("editDiaChi").value = diaChi;
+              document.getElementById("editEmail").value = email;
+              document.getElementById("editHoTenTre").value = hoTenTre;
+              document.getElementById("editNgaySinhTre").value = ngaySinhTre || '';
+              document.getElementById("editTrangThaiTre").value = trangThaiTre;
+          };
+
+    window.exportToCSV = function() {
+        try {
+            const table = document.getElementById("nguoiTable");
+            const rows = table.querySelectorAll("tr");
+            const csvContent = [];
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td, th");
+                const rowData = Array.from(cells).map(cell => `"${cell.textContent.trim().replace(/"/g, '""')}"`);
+                csvContent.push(rowData.join(","));
+            });
+
+            const csvString = csvContent.join("\n");
+            const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Adopters_List_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = "hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error("Export failed:", error);
+            alert("Failed to export data. Please try again.");
+        }
+    };
+
+    window.openAddAdoptionModal = function() {
+        document.getElementById("addAdoption").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    };
+
+    window.closeAddAdoptionModal = function() {
+        document.getElementById("addAdoption").classList.add("hidden");
+        document.body.style.overflow = "auto";
+    };
+
+    window.refreshPage = function() {
+        location.reload();
+    };
+
+    window.closeModal = function() {
+        document.getElementById("editModal").classList.add("hidden");
+        document.body.style.overflow = "auto";
+    };
+
+    window.deleteNguoiNhanNuoi = async function(maSoNnn) {
+        if (!confirm("Are you sure you want to delete this adopter?")) return;
+
+        try {
+            const response = await fetch(`/Admin/Adopter/Delete?id=${maSoNnn}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to delete');
+            }
+
+            if (data.success) {
+                alert("Deleted successfully!");
+                location.reload();
+            } else {
+                alert(data.message || "Failed to delete");
+            }
+        } catch (error) {
+            console.error("Delete error:", error);
+            alert("An error occurred while deleting the adopter");
+        }
+    };
+
+    window.saveAdoption = async function() {
+        const form = document.getElementById("addAdoptionForm");
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        data.MaSoTre = parseInt(data.MaSoTre); // ✅ ép kiểu int
+
+        console.log("Data to send:", data); // 👈 In ra để chắc chắn
+
+        // Bắt buộc phải có: HoTen, Sdt, MaSoTre, NgayNhanNuoi, ...
+
+        // Client-side validation
+        if (!data.HoTen || !data.Sdt || !data.MaSoTre) {
+            alert("Please fill in all required fields");
+            return;
+        }
+                console.log("Server response status:", response.status);
+        console.log("Server response body:", result);
+
+        try {
+            const response = await fetch("/Admin/Adopter/Create", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Failed to create');
+            }
+
+            if (result.success) {
+                alert("Adoption added successfully!");
+                closeAddAdoptionModal();
+                location.reload();
+            } else {
+                alert(result.message || "Failed to add adoption");
+            }
+        } catch (error) {
+            console.error("Save error:", error);
+            alert("An error occurred while adding the adoption");
+        }
+    };
+
+    window.saveChanges = async function() {
+         const formData = {
+            MaSoNnn: document.getElementById("editMaSoNnn").value,
+            HoTen: document.getElementById("editHoTen").value,
+            NgaySinh: document.getElementById("editNgaySinh").value,
+            Sdt: document.getElementById("editSdt").value,
+            DiaChi: document.getElementById("editDiaChi").value,
+            Email: document.getElementById("editEmail").value,
+            MaSoTre: parseInt(document.getElementById("originalMaSoTre").textContent) // ✅ ép kiểu int
+        };
+
+
+        try {
+            const response = await fetch("/Admin/Adopter/Update", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to update');
+            }
+
+            if (data.success) {
+                alert("Updated successfully!");
+                closeModal();
+                location.reload();
+            } else {
+                alert(data.message || "Failed to update");
+            }
+        } catch (error) {
+            console.error("Update error:", error);
+            alert("An error occurred while updating the adopter");
+        }
+    };
+
+    // ============== UTILITY FUNCTIONS ==============
+    function debounce(func, wait) {
+        let timeout;
+        return function() {
+            const context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+
+    function sortList(sortType) {
+        const table = document.querySelector("table tbody");
+        const rows = Array.from(table.querySelectorAll("tr"));
+
+        rows.sort((rowA, rowB) => {
+            let cellA, cellB;
+
+            switch (sortType) {
+                case "maSo_asc":
+                    cellA = parseInt(rowA.children[0].textContent.trim());
+                    cellB = parseInt(rowB.children[0].textContent.trim());
+                    return cellA - cellB;
+
+                case "maSo_desc":
+                    cellA = parseInt(rowA.children[0].textContent.trim());
+                    cellB = parseInt(rowB.children[0].textContent.trim());
+                    return cellB - cellA;
+
+                case "hoTen_asc":
+                    cellA = rowA.children[1].textContent.trim().toLowerCase();
+                    cellB = rowB.children[1].textContent.trim().toLowerCase();
+                    return cellA.localeCompare(cellB);
+
+                case "hoTen_desc":
+                    cellA = rowA.children[1].textContent.trim().toLowerCase();
+                    cellB = rowB.children[1].textContent.trim().toLowerCase();
+                    return cellB.localeCompare(cellA);
+            }
+        });
+
+        table.innerHTML = "";
+        rows.forEach(row => table.appendChild(row));
+    }
+
+    function searchNguoiNhanNuoi() {
+        const input = document.getElementById("search").value.toLowerCase();
+        const rows = document.querySelectorAll("#nguoiNhanNuoiList tr");
+
+        rows.forEach(row => {
+            const name = row.querySelector(".name").textContent.toLowerCase();
+            row.style.display = name.includes(input) ? "" : "none";
+        });
+    }
+
+    function setupDropdown() {
+        const dropdownBtn = document.getElementById("dropdownBtn");
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        const selectedText = document.getElementById("selectedText");
+
+        dropdownBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle("hidden");
+        });
+
+        document.querySelectorAll("#dropdownMenu li").forEach(item => {
+            item.addEventListener("click", function() {
+                const customText = this.getAttribute("data-text");
+                selectedText.textContent = customText;
+                dropdownMenu.classList.add("hidden");
+
+                const sortType = this.getAttribute("data-value");
+                sortList(sortType);
+            });
+        });
+
+        document.addEventListener("click", () => {
+            dropdownMenu.classList.add("hidden");
+        });
+    }
+
+    function setupSearch() {
+        const searchInput = document.getElementById("search");
+        searchInput.addEventListener("input", debounce(searchNguoiNhanNuoi, 300));
+    }
+
+    // ============== INITIALIZATION ==============
+    document.addEventListener("DOMContentLoaded", () => {
+        setupDropdown();
+        setupSearch();
+
+        // Initialize modals as hidden
+        document.getElementById("addAdoption").classList.add("hidden");
+        document.getElementById("editModal").classList.add("hidden");
+    });
+</script>
+}

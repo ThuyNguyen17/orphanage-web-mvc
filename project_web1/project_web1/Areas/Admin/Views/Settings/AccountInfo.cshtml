@@ -1,0 +1,270 @@
+﻿@{
+    ViewData["Title"] = "Account Information";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/AccountInfo.css" asp-append-version="true" />
+}
+<style>
+    .account-settings-container {
+        width: 100%; /* Chiếm toàn bộ chiều rộng */
+        padding: 2rem 1rem; /* Giữ padding để tránh bị dính vào mép màn hình */
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        width: 100%; /* Đảm bảo card chiếm toàn bộ chiều rộng */
+    }
+
+
+
+    .account-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+        .account-header h1 {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .account-header .account-subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+        .form-label i {
+            margin-right: 8px;
+            color: #3498db;
+            width: 20px;
+            text-align: center;
+        }
+
+    .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #dfe6e9;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            outline: none;
+        }
+
+        .form-input.valid {
+            border-color: #2ecc71;
+        }
+
+        .form-input.invalid {
+            border-color: #e74c3c;
+        }
+
+    .form-control-static {
+        padding: 12px 16px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        color: #495057;
+    }
+
+    .form-note {
+        display: block;
+        margin-top: 0.5rem;
+        color: #7f8c8d;
+        font-size: 0.85rem;
+    }
+
+    .btn-save {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-save:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-save i {
+            margin-right: 8px;
+        }
+
+    .form-actions {
+        text-align: right;
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .alert-success {
+        background-color: #d5f5e3;
+        color: #27ae60;
+        border: 1px solid #2ecc71;
+    }
+
+    .alert i {
+        margin-right: 8px;
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        .account-settings-container
+
+    {
+        padding: 1rem;
+    }
+
+    .form-card {
+        padding: 1.5rem;
+    }
+
+    }
+</style>
+<div class="account-settings-container">
+    <div class="account-header">
+        <h1><i class="fas fa-user-circle"></i> @ViewData["Title"]</h1>
+        <p class="account-subtitle">Manage your personal account details</p>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success fade-in">
+            <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <form method="post" asp-action="AccountInfo" asp-route-id="@Model.Id" class="account-form">
+        <div class="form-card">
+            <!-- Username (readonly) -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-user"></i> Username
+                </label>
+                <div class="form-control-static">
+                    @User.Identity.Name
+                </div>
+                <small class="form-note">Your username cannot be changed</small>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email" class="form-label">
+                    <i class="fas fa-envelope"></i> Email Address
+                </label>
+                <input type="email" class="form-input" id="email" name="email" value="@Model.Email" required
+                       placeholder="Enter your email address">
+            </div>
+
+            <!-- Full Name -->
+            <div class="form-group">
+                <label for="fullName" class="form-label">
+                    <i class="fas fa-id-card"></i> Full Name
+                </label>
+                <input type="text" class="form-input" id="fullName" name="fullName" value="@Model.FullName" required
+                       placeholder="Enter your full name">
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                <label for="address" class="form-label">
+                    <i class="fas fa-map-marker-alt"></i> Address
+                </label>
+                <input type="text" class="form-input" id="address" name="address" value="@Model.Address" required
+                       placeholder="Enter your address">
+            </div>
+
+            <!-- Age -->
+            <div class="form-group">
+                <label for="age" class="form-label">
+                    <i class="fas fa-birthday-cake"></i> Age
+                </label>
+                <input type="number" class="form-input" id="age" name="age" value="@Model.Age" required
+                       placeholder="Enter your age" min="18" max="120">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Add input validation feedback
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                } else {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                }
+            });
+        });
+    </script>
+}

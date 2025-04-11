@@ -1,0 +1,105 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="row g-0 shadow-lg rounded-4 overflow-hidden" style="max-width: 900px; width: 100%; margin-top:25px">
+
+        <!-- Ảnh nền -->
+        <div class="col-lg-5 d-none d-lg-block">
+            <img src="https://img-cdn.inc.com/image/upload/f_webp,q_auto,c_fit/images/panoramic/GettyImages-1374879082_530288_ktipyy.jpg"
+                 class="img-fluid h-100 w-100"
+                 alt="Register Background"
+                 style="object-fit: cover;">
+        </div>
+
+        <!-- Form đăng ký -->
+        <div class="col-lg-7 d-flex align-items-center">
+            <div class="card p-5 w-100 border-0">
+                <h2 class="text-center text-primary fw-bold">Create Your Account</h2>
+                <p class="text-center text-muted">Join us and explore the best experience</p>
+                <hr class="mb-4" />
+
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger text-center" role="alert"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Input.FullName" class="form-label fw-semibold">Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-person-circle text-primary"></i></span>
+                            <input asp-for="Input.FullName" class="form-control" placeholder="Enter your full name" />
+                        </div>
+                        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Input.Email" class="form-label fw-semibold">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-envelope-at text-primary"></i></span>
+                            <input asp-for="Input.Email" class="form-control" placeholder="Enter your email" />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Input.Password" class="form-label fw-semibold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-lock-fill text-primary"></i></span>
+                            <input asp-for="Input.Password" type="password" class="form-control password-field" placeholder="Enter your password" />
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label asp-for="Input.ConfirmPassword" class="form-label fw-semibold">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-lock-fill text-primary"></i></span>
+                            <input asp-for="Input.ConfirmPassword" type="password" class="form-control password-field" placeholder="Re-enter your password" />
+                        </div>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="showPassword">
+                        <label class="form-check-label" for="showPassword">
+                            Show Password
+                        </label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class="form-control">
+                            <option disabled selected>-Select Role-</option>
+                        </select>
+                    </div>
+                    <button id="registerSubmit" type="submit" class="btn btn-primary w-100 rounded-pill py-2 shadow-sm">
+                        <i class="bi bi-person-plus-fill"></i> Register Now
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">Or sign up with</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button class="btn btn-outline-danger rounded-pill px-3">
+                            <i class="bi bi-google"></i> Google
+                        </button>
+                        <button class="btn btn-outline-primary rounded-pill px-3">
+                            <i class="bi bi-facebook"></i> Facebook
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('showPassword').addEventListener('change', function () {
+            document.querySelectorAll('.password-field').forEach(field => {
+                field.type = this.checked ? 'text' : 'password';
+            });
+        });
+    </script>
+}

@@ -1,0 +1,431 @@
+﻿@{
+    ViewData["Title"] = "Schedule Checkup";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="~/css/schedulcheckup.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="~/js/schedulecheckup.js"></script>
+
+
+@model List<project_web1.Models.PhieuKhamBenh>
+
+<section id="content">
+    <main>
+        <div class="head-title">
+            <div class="left">
+                <h1>Dashboard</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" href="#">Schedule Checkup</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 shadow-md rounded-lg mb-6">
+            <h2 class="text-lg font-semibold mb-4">Thêm Phiếu Khám Bệnh</h2>
+            <form id="createForm" method="post" asp-action="CreatePhieuKham">
+                @Html.AntiForgeryToken()
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-medium">Trẻ</label>
+                        <select name="MaSoTre" class="w-full p-2 border rounded">
+                            @foreach (var tre in ViewBag.ChildrenList)
+                            {
+                                <option value="@tre.MaSoTre">@tre.HoTen</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium">Ngày Khám</label>
+                        <input type="date" name="NgayKham" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label class="block font-medium">Cân Nặng (kg)</label>
+                        <input type="number" name="CanNang" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label class="block font-medium">Chiều Cao (cm)</label>
+                        <input type="number" name="ChieuCao" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label class="block font-medium">Tình Trạng Sức Khỏe</label>
+                        <textarea name="TinhTrangSucKhoe" class="w-full p-2 border rounded"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-medium">Nhân Viên Y Tế</label>
+                        <select name="Idnvyte" class="w-full p-2 border rounded">
+                            @foreach (var nv in ViewBag.NhanVienYTeList)
+                            {
+                                <option value="@nv.Idnvyte">@nv.HoTen</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Thêm Phiếu Khám</button>
+            </form>
+        </div>
+        <!-- Button xuất Excel -->
+        <button class="export-to-excel bg-green-500 text-white px-4 py-2 rounded mt-4">Xuất Excel</button>
+        <table id="phieuKhamTable" class="min-w-full bg-white border border-gray-300">
+            <thead>
+                <tr>
+                    <th>Mã Phiếu</th>
+                    <th class="number-col">Cân Nặng (kg)</th>
+                    <th class="number-col">Chiều Cao (cm)</th>
+                    <th>Tình Trạng</th>
+                    <th>Ngày Ghi</th>
+                    <th>Tên Trẻ</th>
+                    <th>Nhân Viên Y Tế</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var phieu in Model)
+                {
+                    <tr>
+                        <td>@phieu.MaPhieuKham</td>
+                        <td class="number-col">@phieu.CanNang</td>
+                        <td class="number-col">@phieu.ChieuCao</td>
+                        <td>@phieu.TinhTrangSucKhoe</td>
+                        <td>@phieu.NgayGhi?.ToString("dd/MM/yyyy")</td>
+                        <td>@phieu.MaSoTreNavigation.HoTen</td>
+                        <td>@phieu.IdnvyteNavigation.HoTen</td>
+                        <td>
+                            <button class="bg-red-500 text-white px-3 py-1 rounded delete-btn ml-2" data-id="@phieu.MaPhieuKham">Xóa</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+        <!-- Biểu đồ Cân Nặng và Chiều Cao -->
+        <div class="bg-white p-6 shadow-md rounded-lg">
+            <div class="grid grid-cols-2 gap-4">
+                <div style="width: 500px; height: 400px;">
+                    <h2 class="text-lg font-semibold mb-4">Biểu Đồ Trung Bình Cân Nặng và Chiều Cao</h2>
+                    <canvas id="avgChart" width="500" height="200"></canvas>
+                </div>
+                <div style="width: 500px; height: 300px;">
+                    <h2 class="text-lg font-semibold mb-4">Biểu Đồ Cân Nặng và Chiều Cao Từng Người</h2>
+                    <canvas id="individualChart" width="300" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+</section>
+
+<!-- Modal Chỉnh Sửa -->
+<div id="editModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
+        <h2 class="text-xl font-semibold mb-4">Chỉnh Sửa Phiếu Khám</h2>
+        <form id="editForm" method="post" action="@Url.Action("UpdatePhieuKham", "ScheduleCheckup")">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="MaPhieu" id="editMaPhieu" />
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-medium">Cân Nặng (kg)</label>
+                    <input type="number" name="CanNang" id="editCanNang" class="w-full p-2 border rounded" >
+                </div>
+                <div>
+                    <label class="block font-medium">Chiều Cao (cm)</label>
+                    <input type="number" name="ChieuCao" id="editChieuCao" class="w-full p-2 border rounded" >
+                </div>
+                <div>
+                    <label class="block font-medium">Tình Trạng Sức Khỏe</label>
+                    <textarea name="TinhTrangSucKhoe" id="editTinhTrangSucKhoe" class="w-full p-2 border rounded"></textarea>
+                </div>
+                <div>
+                    <label class="block font-medium">Ngày Khám</label>
+                    <input type="date" name="NgayKham" id="editNgayKham" class="w-full p-2 border rounded" >
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <button type="button" class="mr-2 bg-gray-500 text-white px-4 py-2 rounded close-modal">Hủy</button>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Lưu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@{
+    var totalWeight = Model.Select(p => p.CanNang).LastOrDefault();
+    var totalHeight = Model.Select(p => p.ChieuCao).Max();
+    var totalCount = Model.Count();
+
+    var averageWeight = totalCount > 0 ? totalWeight / totalCount : 0;
+    var averageHeight = totalCount > 0 ? totalHeight / totalCount : 0;
+
+    var labels = Model.Select(p => p.MaSoTreNavigation.HoTen).ToList();
+    var weights = Model.Select(p => p.CanNang).ToList();
+    var heights = Model.Select(p => p.ChieuCao).ToList();
+
+    var children = Model
+        .GroupBy(p => p.MaSoTre)
+        .Select(group => new
+        {
+            MaSoTre = group.Key,
+            MaxHeight = group.Max(p => p.ChieuCao),
+            LatestWeight = group.OrderByDescending(p => p.NgayGhi).FirstOrDefault()?.CanNang
+        })
+        .ToList();
+}
+
+<script>
+        $(document).ready(function() {
+        // Initialize DataTable
+        $('#phieuKhamTable').DataTable({
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",
+                "zeroRecords": "Không tìm thấy dữ liệu",
+                "info": "Trang _PAGE_ / _PAGES_",
+                "infoEmpty": "Không có dữ liệu",
+                "infoFiltered": "(lọc từ _MAX_ bản ghi)",
+                "search": "Tìm kiếm:",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Tiếp",
+                    "previous": "Trước"
+                }
+            }
+        });
+    // Submit thêm phiếu
+         $('#createForm').submit(function(e) {
+             e.preventDefault();
+             $.ajax({
+                 url: $(this).attr('action'),
+                 type: 'POST',
+                 data: $(this).serialize(),
+                 success: function(response) {
+                     if(response.success) {
+                         alert(response.message);
+                         location.reload();
+                     } else {
+                         alert(response.message);
+                     }
+                 },
+                 error: function(xhr) {
+                     alert('Error: ' + xhr.responseText);
+                 }
+             });
+         });
+
+         // Sửa phiếu khám
+         let originalData = {};
+         $(document).on('click', '.edit-btn', function() {
+             var phieuId = $(this).data('id');
+             $.ajax({
+                 url: '@Url.Action("GetPhieuKhamById", "ScheduleCheckup")',
+                 type: 'GET',
+                 data: { id: phieuId },
+                 success: function(response) {
+                     if(response && response.success) {
+                         originalData = {
+                             canNang: response.data.CanNang,
+                             chieuCao: response.data.ChieuCao,
+                             tinhTrangSucKhoe: response.data.TinhTrangSucKhoe,
+                             ngayKham: response.data.NgayKham
+                         };
+
+                         $('#editMaPhieu').val(response.data.MaPhieuKham);
+                         $('#editCanNang').val(response.data.CanNang);
+                         $('#editChieuCao').val(response.data.ChieuCao);
+                         $('#editTinhTrangSucKhoe').val(response.data.TinhTrangSucKhoe);
+                         $('#editNgayKham').val(response.data.NgayKham.split('T')[0]);
+
+                         $('#editModal').removeClass('hidden');
+                     } else {
+                         alert(response?.message || 'Không lấy được dữ liệu');
+                     }
+                 },
+                 error: function(xhr) {
+                     alert('Lỗi: ' + xhr.responseText);
+                 }
+             });
+         });
+
+         // Submit chỉnh sửa phiếu khám
+         $('#editForm').submit(function(e) {
+             e.preventDefault();
+             let formData = {
+                 MaPhieuKham: $('#editMaPhieu').val()
+             };
+
+             if ($('#editCanNang').val() != originalData.canNang) {
+                 formData.CanNang = $('#editCanNang').val();
+             }
+             if ($('#editChieuCao').val() != originalData.chieuCao) {
+                 formData.ChieuCao = $('#editChieuCao').val();
+             }
+             if ($('#editTinhTrangSucKhoe').val() != originalData.tinhTrangSucKhoe) {
+                 formData.TinhTrangSucKhoe = $('#editTinhTrangSucKhoe').val();
+             }
+             if ($('#editNgayKham').val() != originalData.ngayKham) {
+                 formData.NgayKham = $('#editNgayKham').val();
+             }
+
+             if (Object.keys(formData).length <= 1) {
+                 alert('Không có thay đổi nào được thực hiện');
+                 return;
+             }
+
+             $.ajax({
+                 url: $(this).attr('action'),
+                 type: 'POST',
+                 contentType: 'application/json',
+                 data: JSON.stringify(formData),
+                 headers: {
+                     'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                 },
+                 success: function(response) {
+                     if(response.success) {
+                         alert(response.message);
+                         $('#editModal').addClass('hidden');
+                         location.reload();
+                     } else {
+                         alert(response.message || 'Có lỗi khi cập nhật');
+                     }
+                 },
+                 error: function(xhr) {
+                     alert('Lỗi: ' + xhr.responseText);
+                 }
+             });
+         });
+
+         // Đóng modal
+         $('.close-modal').click(function() {
+             $('#editModal').addClass('hidden');
+         });
+
+      
+        // Delete button click
+        $(document).on('click', '.delete-btn', function() {
+            if(!confirm('Bạn có chắc chắn muốn xóa phiếu khám này?')) return;
+
+            var phieuId = $(this).data('id');
+
+            $.ajax({
+                url: '@Url.Action("DeletePhieuKham", "ScheduleCheckup")',
+                type: 'POST',
+                data: { id: phieuId },
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if(response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        });
+
+        // Excel export
+        $('.export-to-excel').click(function() {
+            var table = document.getElementById('phieuKhamTable');
+            var workbook = XLSX.utils.table_to_book(table, {
+                sheet: "Sheet1"
+            });
+            XLSX.writeFile(workbook, 'PhieuKhamBenh.xlsx');
+        });
+
+        // Close modal
+        $(document).on('click', '.close-modal', function() {
+            $('#editModal').addClass('hidden');
+        });
+
+        // Initialize charts
+        initializeCharts();
+    });
+
+    function initializeCharts() {
+        // Average Chart
+        var ctxAvg = document.getElementById('avgChart').getContext('2d');
+        var avgChart = new Chart(ctxAvg, {
+            type: 'bar',
+            data: {
+                labels: ['Trung Bình'],
+                datasets: [
+                    {
+                        label: 'Cân Nặng Trung Bình (kg)',
+                        data: [@Model.Average(p => p.CanNang)],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Chiều Cao Trung Bình (cm)',
+                        data: [@Model.Average(p => p.ChieuCao)],
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+
+        // Individual Chart
+        var labels = @Html.Raw(Json.Serialize(Model.Select(p => p.MaSoTreNavigation.HoTen).ToList()));
+        var weights = @Html.Raw(Json.Serialize(Model.Select(p => p.CanNang).ToList()));
+        var heights = @Html.Raw(Json.Serialize(Model.Select(p => p.ChieuCao).ToList()));
+
+        var ctxInd = document.getElementById('individualChart').getContext('2d');
+        var individualChart = new Chart(ctxInd, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Cân Nặng (kg)',
+                        data: weights,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Chiều Cao (cm)',
+                        data: heights,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    }
+</script>

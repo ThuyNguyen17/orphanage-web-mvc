@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Thank You for Your Donation!";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .thank-you-container {
+            text-align: center;
+            padding: 50px;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .thank-you-header {
+            color: #4CAF50;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .thank-you-details {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            color: #333;
+        }
+
+            .thank-you-details span {
+                font-weight: bold;
+                color: #007bff;
+            }
+
+        .btn-return {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="thank-you-container">
+            <div class="thank-you-header">
+                Thank You for Your Donation!
+            </div>
+            <div class="thank-you-details">
+                <p>Dear <span>@Model.DonorName</span>,</p>
+                <p>Thank you for your generous donation of <span>@Model.Amount</span> <span>@Model.Currency</span>.</p>
+                <p>Your support helps us achieve great things!</p>
+                <p>We will send a confirmation email to <span>@Model.Email</span> shortly.</p>
+                <p>Thank you for your kindness and support!</p>
+            </div>
+            <div class="btn-return">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Return to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

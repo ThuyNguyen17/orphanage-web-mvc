@@ -1,0 +1,434 @@
+﻿@{
+    ViewData["Title"] = "Security & Privacy";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Security.css" asp-append-version="true" />
+}
+<style>
+    .security-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .security-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+        .security-header h1 {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .security-header .security-subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+    .security-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+    }
+
+    .security-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+        .security-item:last-child {
+            border-bottom: none;
+        }
+
+    .security-info {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
+
+    .security-icon {
+        width: 48px;
+        height: 48px;
+        background-color: #f5f7fa;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        color: #3498db;
+        font-size: 1.2rem;
+    }
+
+    .security-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .security-description {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin: 0;
+    }
+
+    /* Toggle Switch */
+    .security-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+
+        .security-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #3498db;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+    /* Danger Zone */
+    .security-danger-zone {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: 8px;
+        background-color: #fff5f5;
+        border: 1px solid #ffdddd;
+    }
+
+        .security-danger-zone h3 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+    .danger-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .danger-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+    }
+
+    .danger-description {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        margin: 0;
+    }
+
+    /* Buttons */
+    .btn-save {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 1rem;
+        margin-top: 2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-save:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-save i {
+            margin-right: 8px;
+        }
+
+    .btn-danger {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-danger i {
+            margin-right: 6px;
+        }
+
+    /* Alert */
+    .security-alert {
+        margin-top: 2rem;
+        padding: 1rem;
+        border-radius: 8px;
+        background-color: #fdecea;
+        border: 1px solid #e74c3c;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .alert-icon {
+        color: #e74c3c;
+        font-size: 1.2rem;
+        margin-right: 1rem;
+        margin-top: 2px;
+    }
+
+    .security-alert h4 {
+        color: #e74c3c;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .error-list {
+        margin: 0;
+        padding-left: 1.5rem;
+        color: #7f8c8d;
+    }
+
+        .error-list li {
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+    /* Modal Styles */
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .modal-title {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+        .modal-title i {
+            margin-right: 8px;
+        }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-list {
+        padding-left: 1.5rem;
+        margin: 1rem 0;
+    }
+
+        .modal-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-list i {
+            margin-right: 8px;
+        }
+
+    .modal-confirm {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: #f9f9f9;
+        border-radius: 6px;
+    }
+
+        .modal-confirm label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .modal-confirm input {
+            margin-right: 8px;
+        }
+
+    .modal-footer {
+        border-top: 1px solid #f0f0f0;
+        justify-content: space-between;
+    }
+
+    @@media (max-width: 768px) {
+        .security-item, .danger-item
+
+    {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .security-switch, .btn-danger {
+        margin-top: 1rem;
+        align-self: flex-end;
+    }
+
+    }
+</style>
+<div class="security-card">
+        <div class="security-header">
+            <h1><i class="fas fa-shield-alt"></i> @ViewData["Title"]</h1>
+            <p class="security-subtitle">Manage your account security and privacy settings</p>
+        </div>
+        <form method="post" asp-action="SecurityPrivacy" enctype="multipart/form-data">
+            <!-- Two-Factor Authentication -->
+            <div class="security-item">
+                <div class="security-info">
+                    <div class="security-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div>
+                        <h3 class="security-title">Two-Factor Authentication</h3>
+                        <p class="security-description">Add an extra layer of security to your account</p>
+                    </div>
+                </div>
+                <label class="security-switch">
+                    <input type="checkbox" id="twoFactor" name="twoFactor">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <!-- Account Privacy -->
+            <div class="security-item">
+                <div class="security-info">
+                    <div class="security-icon">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <div>
+                        <h3 class="security-title">Account Privacy</h3>
+                        <p class="security-description">Make your profile and activity private</p>
+                    </div>
+                </div>
+                <label class="security-switch">
+                    <input type="checkbox" id="accountPrivacy" name="accountPrivacy">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <!-- Data Sharing -->
+            <div class="security-item">
+                <div class="security-info">
+                    <div class="security-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div>
+                        <h3 class="security-title">Data Sharing</h3>
+                        <p class="security-description">Allow sharing analytics with trusted partners</p>
+                    </div>
+                </div>
+                <label class="security-switch">
+                    <input type="checkbox" id="dataSharing" name="dataSharing">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <!-- Email Notifications -->
+            <div class="security-item">
+                <div class="security-info">
+                    <div class="security-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h3 class="security-title">Security Notifications</h3>
+                        <p class="security-description">Get alerts about important security events</p>
+                    </div>
+                </div>
+                <label class="security-switch">
+                    <input type="checkbox" id="emailNotifications" name="emailNotifications">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="security-danger-zone">
+                <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                <div class="danger-item">
+                    <div>
+                        <h4 class="danger-title">Delete Account</h4>
+                        <p class="danger-description">Permanently remove your account and all data</p>
+                    </div>
+                    <button type="button" class="btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="fas fa-trash-alt"></i> Delete Account
+                    </button>
+                </div>
+            </div>
+
+            <div class="security-actions">
+                <button type="submit" class="btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+
+        @if (ViewData.ModelState?.IsValid == false)
+        {
+            <div class="security-alert alert-danger">
+                <div class="alert-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div>
+                    <h4>Error</h4>
+                    <ul class="error-list">
+                        @foreach (var error in ViewData.ModelState.Values)
+                        {
+                            foreach (var subError in error.Errors)
+                            {
+                                <li>@subError.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>

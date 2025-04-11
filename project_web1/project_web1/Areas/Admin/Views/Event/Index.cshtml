@@ -1,0 +1,591 @@
+﻿@* @model IEnumerable<Event> *@
+@model List<project_web1.Models.Event>
+
+@{
+    ViewData["Title"] = "Quản lý sự kiện";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --accent-color: #4895ef;
+        --dark-color: #2b2d42;
+        --light-color: #f8f9fa;
+        --danger-color: #ef233c;
+        --success-color: #4cc9f0;
+        --warning-color: #f8961e;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f7ff;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+        .section-title h2 {
+            font-weight: 700;
+            color: var(--dark-color);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+            .section-title h2::after {
+                content: '';
+                position: absolute;
+                width: 60%;
+                height: 4px;
+                background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+                bottom: -10px;
+                left: 20%;
+                border-radius: 2px;
+            }
+
+        .section-title p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+    .event-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        max-height: 500px; /* Giới hạn chiều cao tối đa */
+    }
+
+    .event-image {
+        width: 100%;
+        height: 180px; /* Giảm chiều cao ảnh */
+        object-fit: cover;
+    }
+
+    .event-date-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .event-body {
+        padding: 1.2rem; /* Giảm padding */
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-title {
+        font-weight: 600;
+        color: var(--dark-color);
+        margin-bottom: 0.8rem; /* Giảm margin */
+        font-size: 1.1rem; /* Giảm kích thước font */
+        line-height: 1.3;
+    }
+
+    .event-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem; /* Giảm khoảng cách */
+        margin-bottom: 0.8rem; /* Giảm margin */
+    }
+
+    .event-meta-item {
+        display: flex;
+        align-items: center;
+        color: #6c757d;
+        font-size: 0.8rem; /* Giảm kích thước font */
+    }
+
+        .event-meta-item i {
+            margin-right: 0.3rem; /* Giảm khoảng cách */
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+    .event-description {
+        color: #495057;
+        font-size: 0.85rem; /* Giảm kích thước font */
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4; /* Giới hạn số dòng hiển thị */
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+    }
+
+    .event-footer {
+        padding: 0.8rem 1.2rem; /* Giảm padding */
+        background-color: gainsboro;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.8rem; /* Giảm khoảng cách */
+    }
+
+    .event-cta {
+        padding: 0.4rem 1rem; /* Giảm padding */
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.8rem; /* Giảm kích thước font */
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+        .event-cta.delete-event {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+            .event-cta.delete-event:hover {
+                background-color: #d90429;
+            }
+
+        .event-cta.edit-event {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+            .event-cta.edit-event:hover {
+                background-color: var(--secondary-color);
+            }
+
+    /* Add new event button */
+    .add-event-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 5px 20px rgba(67, 97, 238, 0.3);
+        z-index: 100;
+        border: none;
+    }
+
+        .add-event-btn:hover {
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+
+    /* Modal styles */
+    .modal-header {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .event-card {
+            margin-bottom: 1.5rem;
+            max-height: none; /* Bỏ giới hạn chiều cao trên mobile */
+        }
+
+        .section-title h2 {
+            font-size: 1.8rem;
+        }
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: #adb5bd;
+            margin-bottom: 1.5rem;
+        }
+
+    /* Image preview */
+    .image-preview-container {
+        margin-bottom: 1rem;
+    }
+
+    .image-preview {
+        max-width: 100%;
+        max-height: 200px;
+        display: block;
+        margin-top: 0.5rem;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .file-input-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .required-field::after {
+        content: " *";
+        color: var(--danger-color);
+    }
+</style>
+
+<section class="content" style="margin:20px">
+    <main>
+        <div class="head-title">
+            <div class="left">
+                <h1>Dashboard</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a asp-action="Index">Dashboard</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" asp-action="Event"> Event</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        @if (Model.Any())
+        {
+            <div class="row">
+                @foreach (var eventItem in Model)
+                {
+                    <div class="col-lg-4 col-md-6" style="margin-bottom:20px">
+                        <div class="event-card">
+                            <div class="event-date-badge">
+                                @eventItem.EventDate.ToString("dd/MM/yyyy")
+                            </div>
+                            <img src="~/@eventItem.ImageUrl" class="event-image" alt="@eventItem.Title">
+                            <div class="event-body">
+                                <h3 class="event-title">@eventItem.Title</h3>
+                                <div class="event-meta">
+                                    <div class="event-meta-item">
+                                        <i class="fas fa-clock"></i> @eventItem.Time
+                                    </div>
+                                    <div class="event-meta-item">
+                                        <i class="fas fa-map-marker-alt"></i> @eventItem.Location
+                                    </div>
+                                </div>
+                                <p class="event-description" title="@eventItem.Description">
+                                    @eventItem.Description
+                                </p>
+                            </div>
+                            <div class="event-footer">
+                                <button class="event-cta delete-event" data-id="@eventItem.Id">
+                                    <i class="fas fa-trash-alt me-1"></i> Xóa
+                                </button>
+
+                                <button class="event-cta edit-event" data-id="@eventItem.Id" data-bs-toggle="modal" data-bs-target="#editEventModal">
+                                    <i class="fas fa-edit me-1"></i> Sửa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <h3>Chưa có sự kiện nào</h3>
+                <p>Hãy thêm sự kiện mới bằng cách nhấn nút bên dưới</p>
+                <button class="btn btn-primary add-event-btn" data-bs-toggle="modal" data-bs-target="#addEventModal">
+                    <i class="fas fa-plus me-2"></i>Thêm sự kiện
+                </button>
+            </div>
+        }
+
+
+        <!-- Floating action button -->
+        @if (Model.Any())
+        {
+            <button class="add-event-btn" data-bs-toggle="modal" data-bs-target="#addEventModal">
+                <i class="fas fa-plus"></i>
+            </button>
+        }
+    </main>
+</section>
+
+<!-- Add Event Modal -->
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEventModalLabel">Thêm sự kiện mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addEventForm" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="addTitle" class="form-label required-field">Tiêu đề</label>
+                                <input type="text" class="form-control" id="addTitle" name="Title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addDate" class="form-label required-field">Ngày</label>
+                                <input type="date" class="form-control" id="addDate" name="EventDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addTime" class="form-label required-field">Thời gian</label>
+                                <input type="text" class="form-control" id="addTime" name="Time" placeholder="VD: 9:00 - 11:00" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addLocation" class="form-label required-field">Địa điểm</label>
+                                <input type="text" class="form-control" id="addLocation" name="Location" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="addImageFile" class="form-label required-field">Hình ảnh</label>
+                                <input type="file" class="form-control" id="addImageFile" name="imageFile" accept="image/*" required>
+                                <small class="text-muted">Chỉ chấp nhận file ảnh (JPEG, PNG)</small>
+                                <div class="image-preview-container mt-2" id="addImagePreviewContainer" style="display: none;">
+                                    <img id="addImagePreview" class="image-preview" src="#" alt="Preview">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addDescription" class="form-label required-field">Mô tả</label>
+                                <textarea class="form-control" id="addDescription" name="Description" rows="5" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary" id="addEventSubmitBtn">
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            Thêm sự kiện
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Event Modal -->
+<div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="editEventForm" enctype="multipart/form-data" method="post" asp-action="Edit" asp-controller="Event" asp-area="Admin">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="editEventModalLabel">Chỉnh sửa sự kiện</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="editId" name="Id" />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editTitle" class="form-label">Tiêu đề</label>
+                                <input type="text" class="form-control" id="editTitle" name="Title" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDate" class="form-label">Ngày</label>
+                                <input type="date" class="form-control" id="editDate" name="EventDate" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTime" class="form-label">Thời gian</label>
+                                <input type="text" class="form-control" id="editTime" name="Time" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="editLocation" class="form-label">Địa điểm</label>
+                                <input type="text" class="form-control" id="editLocation" name="Location" required />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editImageFile" class="form-label">Hình ảnh</label>
+                                <input type="file" class="form-control" id="editImageFile" name="ImageFile" accept="image/*" />
+                                <small class="text-muted">Để trống nếu không thay đổi ảnh.</small>
+
+                                <div class="image-preview-container mt-2">
+                                    <label>Ảnh hiện tại:</label>
+                                    <img id="editCurrentImage" class="image-preview" src="#" alt="Current Image" style="width: 100%; max-height: 200px; object-fit: cover;" />
+                                    <img id="editImagePreview" class="image-preview mt-2" src="#" alt="Preview" style="display: none; width: 100%; max-height: 200px; object-fit: cover;" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDescription" class="form-label">Mô tả</label>
+                                <textarea class="form-control" id="editDescription" name="Description" rows="5" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary" id="editEventSubmitBtn">
+                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('click', function(e) {
+        // Xử lý sự kiện edit
+        if (e.target.closest('.edit-event')) {
+            const button = e.target.closest('.edit-event');
+            const eventId = button.dataset.id;
+
+            // Gọi API để lấy thông tin sự kiện
+            fetch(`/Admin/Event/GetEventById?id=${eventId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Điền dữ liệu vào form edit
+                        document.getElementById('editId').value = data.eventData.id;
+                        document.getElementById('editTitle').value = data.eventData.title;
+                        document.getElementById('editDate').value = new Date(data.eventData.eventDate).toISOString().split('T')[0];
+                        document.getElementById('editTime').value = data.eventData.time;
+                        document.getElementById('editLocation').value = data.eventData.location;
+                        document.getElementById('editDescription').value = data.eventData.description;
+
+                        document.getElementById('editCurrentImage').src = `/${data.eventData.imageUrl}`;
+
+                        // Hiển thị ảnh hiện tại
+                        const currentImage = document.getElementById('editCurrentImage');
+                        currentImage.src = `/${data.eventData.imageUrl}`;
+                        currentImage.style.display = 'block';
+
+                        // Mở modal
+                        const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
+                        editModal.show();
+                    } else {
+                        Swal.fire('Lỗi', data.message, 'error');
+                        console.log('Error:', data);
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Lỗi', 'Đã xảy ra lỗi khi gọi API', 'error');
+                    console.error('Error:', error);
+                });
+        }
+
+        // Xử lý sự kiện delete
+        if (e.target.closest('.delete-event')) {
+            const button = e.target.closest('.delete-event');
+            const eventId = button.dataset.id;
+
+            // Kiểm tra ID
+            if (!eventId || eventId === "0") {
+                Swal.fire('Lỗi', 'ID sự kiện không hợp lệ', 'error');
+                console.error("Invalid event ID:", eventId);
+                return;
+            }
+
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa sự kiện này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/Admin/Event/Delete', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: JSON.stringify({ id: eventId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('Đã xóa!', 'Sự kiện đã được xóa thành công.', 'success')
+                                .then(() => location.reload());
+                        } else {
+                            Swal.fire('Lỗi', data.message, 'error');
+                            console.log('Error:', data);
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire('Lỗi', 'Đã xảy ra lỗi khi gọi API', 'error');
+                        console.error('Error:', error);
+                    });
+                }
+            });
+        }
+    });
+
+    // Xử lý preview ảnh khi edit
+    document.getElementById('editImageFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('editImagePreview');
+        const currentImage = document.getElementById('editCurrentImage');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                currentImage.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+            currentImage.style.display = 'block';
+        }
+    });
+</script>

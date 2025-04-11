@@ -1,0 +1,192 @@
+﻿@{
+    ViewData["Title"] = "Manage Children";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+<script src="~/js/managerchildren.js"></script>
+<link rel="stylesheet" href="~/css/managechild.css">
+@model List<project_web1.Models.Tre>
+<section id="content">
+    <main>
+        <div class="head-title">
+            <div class="left">
+                <h1>Quản lý trẻ em</h1>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li>
+                        <a class="active" href="#">Quản lý trẻ em</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mb-6 flex flex-col md:flex-row justify-between items-center gap-4 mt-5">
+            <div class="relative w-full md:w-3/4">
+                <input type="text" id="search" placeholder="Tìm kiếm theo tên..."
+                       class="border border-gray-300 p-3 rounded-lg w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent pl-10">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+            <button onclick="openAddChildModal()" id="openAddChildModalBtn"
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded-lg shadow-md transition duration-300 w-full md:w-auto flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Thêm trẻ mới
+            </button>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <h2 class="text-2xl font-semibold text-gray-800">Trẻ đang ở trung tâm</h2>
+                <div class="flex items-center gap-4">
+                    <span id="centerCount" class="text-gray-600">@Model.Count(p => p.TrangThai == "Trung Tam") trẻ</span>
+                    <a href="javascript:void(0);" onclick="toggleViewAll('childrenInCenter')"
+                       class="text-blue-500 hover:text-blue-700 font-medium view-all-link"></a>
+                </div>
+            </div>
+            <div id="childrenInCenter" class="relative">
+                <div class="cards-container">
+                    @foreach (var tre in Model.Where(t => t.TrangThai == "Trung Tam"))
+                    {
+                        <div class="child-card bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition duration-300"
+                             data-id="@tre.MaSoTre"
+                             oncontextmenu="showTooltip(event, @tre.MaSoTre)">
+                            <div class="relative pb-3/4">
+                                <img src="@Url.Content("~/images/" + tre.AnhDaiDien)" alt="Ảnh đại diện"
+                                     class="w-full h-64 object-cover rounded-t-lg mb-3" />
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">@tre.HoTen</h3>
+                            <p class="text-gray-600 text-sm mb-2">@tre.NgaySinh?.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <h2 class="text-2xl font-semibold text-gray-800">Trẻ đã được nhận nuôi</h2>
+                <div class="flex items-center gap-4">
+                    <span id="adoptedCount" class="text-gray-600">@Model.Count(p => p.TrangThai == "Nhan Nuoi") trẻ</span>
+                    <a href="javascript:void(0);" onclick="toggleViewAll('adoptedChildren')"
+                       class="text-blue-500 hover:text-blue-700 font-medium view-all-link"></a>
+                </div>
+            </div>
+
+            <div id="adoptedChildren" class="relative">
+                <div class="cards-container">
+                    @foreach (var tre in Model.Where(t => t.TrangThai == "Nhan Nuoi"))
+                    {
+                        <div class="child-card bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition duration-300"
+                             data-id="@tre.MaSoTre"
+                             oncontextmenu="showTooltip(event, @tre.MaSoTre)">
+                            <div class="relative pb-3/4">
+                                <img src="@Url.Content("~/images/" + tre.AnhDaiDien)" alt="Ảnh đại diện"
+                                     class="w-full h-64 object-cover rounded-t-lg mb-3" />
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-1">@tre.HoTen</h3>
+                            <p class="text-gray-600 text-sm mb-2">@tre.NgaySinh?.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </main>
+</section>
+<!-- Tooltip -->
+<div id="tooltip" class="tooltip hidden">
+    <button onclick="viewChildDetails()">Chi tiết</button>
+    <button onclick="editChild()">Chỉnh sửa</button>
+    <button onclick="deleteChild()" class="text-red-500 hover:text-red-700">Xóa</button>
+</div>
+
+<!-- Modal Form -->
+<div id="addChildModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold">Thêm trẻ mới</h2>
+            <button onclick="closeAddChildModal()" id="closeAddChildModalBtn" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <form id="addChildForm" asp-controller="ManageChildren" asp-action="CreateChild" asp-area="admin" method="post" enctype="multipart/form-data">
+            <div class="space-y-4">
+                <div>
+                    <label for="childName" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
+                    <input type="text" id="childName" name="HoTen" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+
+                <div>
+                    <label for="childDob" class="block text-sm font-medium text-gray-700 mb-1">Ngày sinh</label>
+                    <input type="date" id="childDob" name="NgaySinh" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
+                    <div class="flex gap-6">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="GioiTinh" value="Nam" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <span class="ml-2 text-gray-700">Nam</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="GioiTinh" value="Nu" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <span class="ml-2 text-gray-700">Nữ</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="childCaretaker" class="block text-sm font-medium text-gray-700 mb-1">Người chăm sóc</label>
+                    <div class="flex items-center gap-4">
+                        <select id="childCaretaker" name="MaNhanVien" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required onchange="updateCaretakerId()">
+                            <option value="">-- Chọn người chăm sóc --</option>
+                            @foreach (var caretaker in ViewBag.Caretakers)
+                            {
+                                <option value="@caretaker.Value" data-id="@caretaker.Value">
+                                    @caretaker.Text
+                                </option>
+                            }
+                        </select>
+                        <span class="text-sm text-gray-600 whitespace-nowrap">ID: <span id="caretakerId" class="font-medium">--</span></span>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="childImage" class="block text-sm font-medium text-gray-700 mb-1">Ảnh đại diện</label>
+                    <input type="file" id="childImage" name="AnhDaiDienFile" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" accept="image/*" required>
+                </div>
+
+                <div>
+                    <label for="childStatus" class="block text-sm font-medium text-gray-700 mb-1">Tình trạng</label>
+                    <select id="childStatus" name="TrangThai" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required onchange="toggleEntryDate()">
+                        <option value="Nhan Nuoi">Đã nhận nuôi</option>
+                        <option value="Trung Tam">Đang ở trung tâm</option>
+                    </select>
+                </div>
+
+                <div class="hidden" id="entryDateContainer">
+                    <label for="entryDate" class="block text-sm font-medium text-gray-700 mb-1">Ngày vào trung tâm</label>
+                    <input type="date" id="entryDate" name="ngaynhaptrungtam" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="button" onclick="closeAddChildModal()" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Hủy bỏ
+                </button>
+                <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Lưu thông tin
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

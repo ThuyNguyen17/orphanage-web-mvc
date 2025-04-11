@@ -1,0 +1,62 @@
+﻿<!-- Include Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<!-- 404 Start -->
+<div class="container-fluid py-5 bg-light wow fadeInUp" data-wow-delay="0.3s">
+    <div class="container text-center py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <!-- Heart icon instead of triangle -->
+                <i class="fas fa-heart-broken display-1 text-primary mb-4"></i>
+                <h1 class="display-1 text-primary">404</h1>
+                <h2 class="mb-4">Oh no! We've lost this page</h2>
+
+                <!-- Child-friendly message -->
+                <div class="error-message bg-white p-4 rounded border border-primary mb-4">
+                    <p class="mb-3">Just like we help lost children find their way home, let us help you find what you're looking for.</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <i class="fas fa-home text-primary me-2"></i>
+                        <p class="mb-0">Perhaps you'd like to return to our <a href="/" class="text-secondary">home page</a>?</p>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="d-flex justify-content-center gap-3">
+                    <a class="btn btn-primary rounded-pill py-3 px-5" href="/">
+                        <i class="fas fa-home me-2"></i> Go Home
+                    </a>
+                    <a class="btn btn-outline-primary rounded-pill py-3 px-5" href="/contact">
+                        <i class="fas fa-phone-alt me-2"></i> Contact Us
+                    </a>
+                </div>
+
+                <!-- Search option -->
+                <div class="mt-4">
+                    <p class="text-muted mb-2">Or try searching:</p>
+                    <div class="input-group mx-auto" style="max-width: 400px;">
+                        <input type="text" class="form-control border-primary" placeholder="Search our site...">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 404 End -->
+
+<style>
+    .error-message {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+</style>

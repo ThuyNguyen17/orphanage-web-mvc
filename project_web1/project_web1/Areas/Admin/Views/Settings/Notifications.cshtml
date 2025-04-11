@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Notification Settings";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout_admin.cshtml";
+}
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Notification.css" asp-append-version="true" />
+}
+
+<div class="notification-settings">
+    <h2>Notifications</h2>
+
+    <div class="notification-section">
+        <div class="setting-row">
+            <div>
+                <div class="setting-label">Enable Desktop Notification</div>
+                <div class="setting-description">Receive notification of all the messages, contracts, documents.</div>
+            </div>
+            <input class="toggle-switch" type="checkbox" name="EnableDesktopNotification" />
+        </div>
+
+        <div class="setting-row">
+            <div>
+                <div class="setting-label">Enable Unread Notification Badge</div>
+                <div class="setting-description">Shows a red badge on the app icon when you have unread message</div>
+            </div>
+            <input class="toggle-switch" type="checkbox" name="EnableUnreadBadge" />
+        </div>
+
+        <div class="setting-row">
+            <div>
+                <div class="setting-label">Push Notification Time-out</div>
+                <div class="setting-description">Set timeout for push notifications</div>
+            </div>
+            <select class="select-dropdown" name="PushTimeout">
+                <option>5 Minutes</option>
+                <option selected>10 Minutes</option>
+                <option>15 Minutes</option>
+                <option>30 Minutes</option>
+            </select>
+        </div>
+    </div>
+
+    <h4>Email Notifications</h4>
+    <div class="notification-section">
+        <div class="setting-row">
+            <div>
+                <div class="setting-label">Communication Emails</div>
+                <div class="setting-description">Receive email for messages, contracts, documents.</div>
+            </div>
+            <input class="toggle-switch" type="checkbox" name="EmailCommunication" />
+        </div>
+
+        <div class="setting-row">
+            <div>
+                <div class="setting-label">Announcements & Updates</div>
+                <div class="setting-description">Receive email about product updates, improvements, etc.</div>
+            </div>
+            <input class="toggle-switch" type="checkbox" name="EmailUpdates" />
+        </div>
+    </div>
+
+    <h4>Sounds</h4>
+    <div class="notification-section">
+        <div class="setting-row">
+            <div>
+                <div class="setting-label">Disable All Notification Sounds</div>
+                <div class="setting-description">Mute all notification of the messages, contracts, documents.</div>
+            </div>
+            <input class="toggle-switch" type="checkbox" name="MuteSounds" />
+        </div>
+    </div>
+
+    <div class="text-end mt-4">
+        <button class="btn btn-primary rounded-pill px-4 py-2 fw-semibold shadow-sm">
+            Save Settings
+        </button>
+    </div>
+</div>
